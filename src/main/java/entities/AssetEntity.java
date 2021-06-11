@@ -18,7 +18,9 @@ public class AssetEntity {
     @Column(name = "buyprice")
     private int buyPrice;
 
-    @ManyToOne
+    @ManyToOne(targetEntity = StockEntity.class,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinColumn(name="stock_id")
     private StockEntity stock;
 
@@ -52,5 +54,16 @@ public class AssetEntity {
 
     public void setStock(StockEntity stock) {
         this.stock = stock;
+    }
+
+    @Override
+    public String toString() {
+        return "AssetEntity{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", buyPrice=" + buyPrice +
+                ", stock Name=" + stock.getName() +
+                ", stock current price =" + stock.getCurrentPrice() +
+                '}';
     }
 }
