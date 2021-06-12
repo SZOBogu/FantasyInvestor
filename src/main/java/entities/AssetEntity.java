@@ -16,7 +16,7 @@ public class AssetEntity {
 
     @Basic
     @Column(name = "buyprice")
-    private int buyPrice;
+    private double buyPrice;
 
     @ManyToOne(targetEntity = StockEntity.class,
             cascade = {CascadeType.DETACH, CascadeType.MERGE,
@@ -40,11 +40,11 @@ public class AssetEntity {
         this.quantity = quantity;
     }
 
-    public int getBuyPrice() {
+    public double getBuyPrice() {
         return buyPrice;
     }
 
-    public void setBuyPrice(int buyPrice) {
+    public void setBuyPrice(double buyPrice) {
         this.buyPrice = buyPrice;
     }
 

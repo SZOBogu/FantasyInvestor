@@ -13,7 +13,8 @@ public class PortfolioEntity {
 
 
     @OneToMany(targetEntity = AssetEntity.class, mappedBy = "assetEntity",
-            cascade = CascadeType.ALL,
+            cascade = {CascadeType.DETACH, CascadeType.MERGE,
+                    CascadeType.PERSIST, CascadeType.REFRESH},
             fetch = FetchType.EAGER)
     private List<AssetEntity> assets;
 
@@ -31,5 +32,22 @@ public class PortfolioEntity {
 
     public void setAssets(List<AssetEntity> assets) {
         this.assets = assets;
+    }
+
+    @Override
+    public String toString() {
+        return "PortfolioEntity{" +
+                "id=" + id +
+                ", assets=" + assets +
+                '}';
+    }
+
+    public AssetEntity getCash(){
+        for(AssetEntity assetEntity : assets){
+            if(assetEntity.getStock().getName().equals("Cash")){
+                return assetEntity;
+            }
+        }
+        return null;
     }
 }

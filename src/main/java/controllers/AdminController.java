@@ -1,33 +1,140 @@
 package controllers;
 
+import com.google.gson.Gson;
+import entities.AssetEntity;
+import entities.PortfolioEntity;
+import entities.StockEntity;
+import entities.UserEntity;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import services.UserService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.BufferedReader;
+import java.util.List;
+import java.util.Random;
 
 @Controller
 @RequestMapping("/admin")
 public class AdminController {
-    @DeleteMapping(value = "/deleteUser/{id}")
-    public String deleteUser(@PathVariable int id){
 
+    @Autowired
+    private UserService userService;
+
+    private final SessionFactory factory = new Configuration()
+            .addAnnotatedClass(AssetEntity.class)
+            .addAnnotatedClass(PortfolioEntity.class)
+            .addAnnotatedClass(StockEntity.class)
+            .addAnnotatedClass(UserEntity.class)
+            .buildSessionFactory();
+
+
+    @DeleteMapping(value = "/deleteUser/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable int id){
+        try{
+            userService.deleteUser(id);
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("");
+        }
+        finally {
+            factory.close(); //potential errors
+        }
     }
 
     @DeleteMapping(value = "/deleteStock/{id}")
-    public String deleteStock(@PathVariable int id){
+    public ResponseEntity<String> deleteStock(@PathVariable int id){
+        Session session = factory.getCurrentSession();
+        try{
+            session.getTransaction().begin();
+            UserEntity user = session.get(UserEntity.class, id);
+            session.delete(user);
+            System.out.println("User: " + user.toString() + " deleted.");
+            session.close();
 
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("");
+        }
+        finally {
+            factory.close(); //potential errors
+        }
     }
 
-    @PostMapping(value = "/createStock")
-    public String createStock(HttpServletRequest request){
+    @PostMapping(value = "/createStock", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> createStock(HttpServletRequest request){
+        Session session = factory.getCurrentSession();
 
+        Gson gson = new Gson();
+        StringBuffer jb = new StringBuffer();
+        String line = null;
+
+        try{
+            System.out.println("Dashboard servlet received POST");
+            BufferedReader reader = request.getReader();
+            while ((line = reader.readLine()) != null)
+                jb.append(line);
+
+            String jsonString = jb.toString();
+
+            StockEntity stock = gson.fromJson(jsonString, StockEntity.class);
+            System.out.println(stock);
+
+            session.getTransaction().begin();
+            session.save(stock);
+            session.getTransaction().commit();
+            session.close();
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("");
+        }
+        catch(Exception ex){
+            System.out.println("Dashboard servlet received POST, exception: " + ex.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("");
+        }
+        finally {
+            factory.close(); //potential errors
+        }
     }
 
     @RequestMapping(value = "/forcePriceChanges")
-    public String forceUpdate(){
+    public void forceUpdate(){
+        Session session = factory.getCurrentSession();
+        List<StockEntity> stocks;
+        try{
+            session.getTransaction().begin();
+            stocks = session.createQuery(" from StockEntity").getResultList();
 
+            Random r = new Random();
+
+            //exclude cash
+            for(StockEntity stock : stocks){
+                double percentChange = r.nextDouble();
+                boolean isRaising = r.nextBoolean();
+
+                if(isRaising){
+                    stock.setCurrentPrice(stock.getCurrentPrice() * (1 + percentChange));
+                }
+                else {
+                    stock.setCurrentPrice(stock.getCurrentPrice() * (1 - percentChange));
+                }
+                session.update(stock);      //a lot of potential trouble
+            }
+
+            session.getTransaction().commit();
+            session.close();
+        }
+        finally {
+            factory.close(); //potential errors
+        }
     }
 }

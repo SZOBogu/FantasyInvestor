@@ -2,6 +2,7 @@ package entities;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Objects;
 
 @Table(name = "stock", schema = "FantasyInvestor")
 public class StockEntity {
@@ -16,25 +17,26 @@ public class StockEntity {
 
     @Basic
     @Column(name = "currentPrice")
-    private int currentPrice;
+    private double currentPrice;
 
     @Basic
     @Column(name = "priceAtTheStarOfTheDay")
-    private int priceAtTheStarOfTheDay;
+    private double priceAtTheStarOfTheDay;
 
     @Basic
     @Column(name = "priceAtTheStarOfTheWeek")
-    private int priceAtTheStarOfTheWeek;
+    private double priceAtTheStarOfTheWeek;
 
     @Basic
     @Column(name = "priceAtTheStarOfTheMonth")
-    private int priceAtTheStarOfTheMonth;
+    private double priceAtTheStarOfTheMonth;
 
     @Basic
     @Column(name = "priceAtTheStarOfTheYear")
-    private int priceAtTheStarOfTheYear;
+    private double priceAtTheStarOfTheYear;
 
-    @OneToMany(mappedBy="cart", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="cart", cascade = {CascadeType.DETACH, CascadeType.MERGE,
+            CascadeType.PERSIST, CascadeType.REFRESH})
     private List<AssetEntity> assets;
 
     public int getId() {
@@ -53,43 +55,43 @@ public class StockEntity {
         this.name = name;
     }
 
-    public int getCurrentPrice() {
+    public double getCurrentPrice() {
         return currentPrice;
     }
 
-    public void setCurrentPrice(int currentPrice) {
+    public void setCurrentPrice(double currentPrice) {
         this.currentPrice = currentPrice;
     }
 
-    public int getPriceAtTheStarOfTheDay() {
+    public double getPriceAtTheStarOfTheDay() {
         return priceAtTheStarOfTheDay;
     }
 
-    public void setPriceAtTheStarOfTheDay(int priceAtTheStarOfTheDay) {
+    public void setPriceAtTheStarOfTheDay(double priceAtTheStarOfTheDay) {
         this.priceAtTheStarOfTheDay = priceAtTheStarOfTheDay;
     }
 
-    public int getPriceAtTheStarOfTheWeek() {
+    public double getPriceAtTheStarOfTheWeek() {
         return priceAtTheStarOfTheWeek;
     }
 
-    public void setPriceAtTheStarOfTheWeek(int priceAtTheStarOfTheWeek) {
+    public void setPriceAtTheStarOfTheWeek(double priceAtTheStarOfTheWeek) {
         this.priceAtTheStarOfTheWeek = priceAtTheStarOfTheWeek;
     }
 
-    public int getPriceAtTheStarOfTheMonth() {
+    public double getPriceAtTheStarOfTheMonth() {
         return priceAtTheStarOfTheMonth;
     }
 
-    public void setPriceAtTheStarOfTheMonth(int priceAtTheStarOfTheMonth) {
+    public void setPriceAtTheStarOfTheMonth(double priceAtTheStarOfTheMonth) {
         this.priceAtTheStarOfTheMonth = priceAtTheStarOfTheMonth;
     }
 
-    public int getPriceAtTheStarOfTheYear() {
+    public double getPriceAtTheStarOfTheYear() {
         return priceAtTheStarOfTheYear;
     }
 
-    public void setPriceAtTheStarOfTheYear(int priceAtTheStarOfTheYear) {
+    public void setPriceAtTheStarOfTheYear(double priceAtTheStarOfTheYear) {
         this.priceAtTheStarOfTheYear = priceAtTheStarOfTheYear;
     }
 
@@ -99,5 +101,27 @@ public class StockEntity {
 
     public void setAssets(List<AssetEntity> assets) {
         this.assets = assets;
+    }
+
+    @Override
+    public String toString() {
+        return "StockEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", currentPrice=" + currentPrice +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StockEntity that = (StockEntity) o;
+        return id == that.id && Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }
