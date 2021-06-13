@@ -140,8 +140,6 @@ public class UserController {
         try{
             session.getTransaction().begin();
             StockEntity stock = session.get(StockEntity.class, id);
-            session.getTransaction().commit();
-
             String json = gson.toJson(stock);
             session.getTransaction().commit();
 
@@ -190,7 +188,7 @@ public class UserController {
                     }
                 }
             }
-
+            session.getTransaction().commit();
             session.close();
 
             return ResponseEntity.status(HttpStatus.OK)
@@ -258,6 +256,7 @@ public class UserController {
 
                     portfolio.getAssets().add(boughtAsset);
                     session.update(portfolio);          //TODO: test
+                    session.getTransaction().commit();
 
                     return ResponseEntity.status(HttpStatus.OK)
                             .body("");
@@ -299,6 +298,14 @@ public class UserController {
             String jsonString = jb.toString();
 
             UserEntity user = gson.fromJson(jsonString, UserEntity.class);
+
+            PortfolioEntity portfolio = new PortfolioEntity();
+            AssetEntity cashAsset = new AssetEntity();
+            cashAsset.setQuantity(1000000);
+            cashAsset.setStock(stockService.getStockByName("Cash"));
+            portfolio.getAssets().add(cashAsset);
+            session.save(cashAsset);
+            session.save(portfolio);
             session.save(user);
             session.getTransaction().commit();
             session.close();

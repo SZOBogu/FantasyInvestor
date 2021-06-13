@@ -48,7 +48,7 @@ public class LeaderboardController {
             }
 
             String json = gson.toJson(response);
-
+            session.getTransaction().commit();
             session.close();
 
             return ResponseEntity.status(HttpStatus.OK)

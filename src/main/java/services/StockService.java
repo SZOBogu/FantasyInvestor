@@ -35,7 +35,7 @@ public class StockService {
         }
     }
 
-    public StockEntity getStockById(String name){
+    public StockEntity getStockByName(String name){
         Session session = factory.getCurrentSession();
 
         try {
