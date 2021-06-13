@@ -10,8 +10,6 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.util.Locale;
-
 @Service
 public class StockService {
     private final SessionFactory factory = new Configuration()
@@ -27,6 +25,7 @@ public class StockService {
         try {
             session.getTransaction().begin();
             StockEntity stockEntity = session.get(StockEntity.class, id);
+            session.getTransaction().commit();
             return stockEntity;
         }
         finally {
@@ -45,7 +44,9 @@ public class StockService {
                     createQuery("from StockEntity where name=:name");
             query.setParameter("name", name);
 
-            return (StockEntity) query.uniqueResult();
+            StockEntity stock =  (StockEntity) query.uniqueResult();
+            session.getTransaction().commit();
+            return stock;
         }
         finally {
             session.close();
