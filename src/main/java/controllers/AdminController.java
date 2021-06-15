@@ -118,16 +118,17 @@ public class AdminController {
 
             //exclude cash
             for(StockEntity stock : stocks){
-                double percentChange = r.nextDouble();
-                boolean isRaising = r.nextBoolean();
+                if(!stock.getName().equals("Cash")) {
+                    double percentChange = r.nextDouble();
+                    boolean isRaising = r.nextBoolean();
 
-                if(isRaising){
-                    stock.setCurrentPrice(stock.getCurrentPrice() * (1 + percentChange));
+                    if (isRaising) {
+                        stock.setCurrentPrice(stock.getCurrentPrice() * (1 + percentChange));
+                    } else {
+                        stock.setCurrentPrice(stock.getCurrentPrice() * (1 - percentChange));
+                    }
+                    session.update(stock);      //a lot of potential trouble
                 }
-                else {
-                    stock.setCurrentPrice(stock.getCurrentPrice() * (1 - percentChange));
-                }
-                session.update(stock);      //a lot of potential trouble
             }
 
             session.getTransaction().commit();

@@ -192,10 +192,10 @@ public class UserController {
             session.close();
 
             return ResponseEntity.status(HttpStatus.OK)
-                    .body("");
+                    .body("Stock sold");
         }
         catch(IOException e){
-            System.out.println("User controller, buy stock received POST, exception: " + e.getMessage());
+            System.out.println("User controller, sell stock received POST, exception: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("");
         }
@@ -259,7 +259,7 @@ public class UserController {
                     session.getTransaction().commit();
 
                     return ResponseEntity.status(HttpStatus.OK)
-                            .body("");
+                            .body("Stock bought");
                 }
 //                portfolio.getAssets().add
             }
@@ -271,17 +271,17 @@ public class UserController {
         catch(IOException ioException){
             System.out.println("User controller, sell stock received POST, exception: " + ioException.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("");
+                    .body("IOException");
         }
         finally {
             factory.close();
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("");
+                .body("Stock buying failed");
     }
 
-    @PostMapping(value = "/createUser", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> createUser(HttpServletRequest request){
+    @PostMapping(value = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> signup(HttpServletRequest request){
         Session session = factory.getCurrentSession();
 
         Gson gson = new Gson();
@@ -311,7 +311,7 @@ public class UserController {
             session.close();
 
             return ResponseEntity.status(HttpStatus.OK)
-                    .body("");
+                    .body("User Created");
         }
         catch (IOException exception){
             System.out.println("User controller, createUser received POST, exception: " + exception.getMessage());

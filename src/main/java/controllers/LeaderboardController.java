@@ -43,7 +43,7 @@ public class LeaderboardController {
             Collections.sort(users);
             LeaderboardResponse response = new LeaderboardResponse();
 
-            for(int i = 0; i < 10; i++){
+            for(int i = 0; i < users.size(); i++){
                 response.add(new LeaderboardDigest(users.get(i)));
             }
 
