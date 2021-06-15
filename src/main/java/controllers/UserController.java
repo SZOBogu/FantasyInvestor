@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import pojos.StockDataDigest;
 import requests.BuyStockRequest;
 import requests.SellStockRequest;
+import requests.SignupRequest;
 import responses.PortfolioResponse;
 import responses.StockListResponse;
 import services.AssetOperationService;
@@ -297,7 +298,18 @@ public class UserController {
 
             String jsonString = jb.toString();
 
-            UserEntity user = gson.fromJson(jsonString, UserEntity.class);
+            SignupRequest signupRequest = gson.fromJson(jsonString, SignupRequest.class);
+
+            UserEntity user = new UserEntity();
+            user.setUsername(signupRequest.getUsername());
+            user.setPassword(signupRequest.getPassword());
+
+            if(signupRequest.getUsername().equals("admin")){
+                user.setRole("ADMIN");
+            }
+            else
+                user.setRole("USER");
+
 
             PortfolioEntity portfolio = new PortfolioEntity();
             AssetEntity cashAsset = new AssetEntity();

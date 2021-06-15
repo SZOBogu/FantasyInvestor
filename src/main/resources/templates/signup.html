@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="topnav">
+    <a  href="/">Home</a>
+    <a href="portfolio.html">Portfolio</a>
+    <a href="stocks.html">Stocks</a>
+    <a href="leaderboard.html">Leaderboard</a>
+</div>
+
+<form onsubmit="signup()">
+  <label for="username">Username:</label><br>
+  <input type="text" id="username" name="username"><br>
+  <label for="password">Password:</label><br>
+  <input type="password" id="password" name="password">
+  <input type="submit" value="Submit">
+</form>
+
+<script>
+    class SignupRequest{
+        constructor(username, password){
+            this.username = username;
+            this.password = password;
+        }
+    }
+
+    function signup(){
+        usernameInput = document.getElementById("username");
+        passwordInput = document.getElementById("password");
+
+        var xhr = new XMLHttpRequest();
+        url = "http://localhost:8080/signup";
+        xhr.open("POST", url, false);
+
+        signupRequest = new SignupRequest(usernameInput.value, passwordInput.value);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+        xhr.onreadystatechange = function () {
+            document.querySelector('html').innerHTML = xhr.responseText;
+        }
+
+        xhr.send(JSON.stringify(signupRequest));
+    }
+</script>
+</body>
+</html>
