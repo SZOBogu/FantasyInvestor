@@ -31,13 +31,6 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
-    private final SessionFactory factory = new Configuration()
-            .addAnnotatedClass(AssetEntity.class)
-            .addAnnotatedClass(PortfolioEntity.class)
-            .addAnnotatedClass(StockEntity.class)
-            .addAnnotatedClass(UserEntity.class)
-            .buildSessionFactory();
-
 
     @RequestMapping
     private String getPage(){
@@ -48,18 +41,20 @@ public class AdminController {
     public ResponseEntity<String> deleteUser(@PathVariable int id){
         System.out.println("AdminController /deleteUser");
 
-        try{
-            userService.deleteUser(id);
-            return ResponseEntity.status(HttpStatus.OK)
+        userService.deleteUser(id);
+        return ResponseEntity.status(HttpStatus.OK)
                     .body("");
-        }
-        finally {
-            factory.close(); //potential errors
-        }
     }
 
     @DeleteMapping(value = "/deleteStock/{id}")
     public ResponseEntity<String> deleteStock(@PathVariable int id){
+        SessionFactory factory = new Configuration()
+                .addAnnotatedClass(AssetEntity.class)
+                .addAnnotatedClass(PortfolioEntity.class)
+                .addAnnotatedClass(StockEntity.class)
+                .addAnnotatedClass(UserEntity.class)
+                .buildSessionFactory();
+
         Session session = factory.getCurrentSession();
         try{
             session.getTransaction().begin();
@@ -78,6 +73,13 @@ public class AdminController {
 
     @PostMapping(value = "/createStock", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createStock(HttpServletRequest request){
+        SessionFactory factory = new Configuration()
+                .addAnnotatedClass(AssetEntity.class)
+                .addAnnotatedClass(PortfolioEntity.class)
+                .addAnnotatedClass(StockEntity.class)
+                .addAnnotatedClass(UserEntity.class)
+                .buildSessionFactory();
+
         Session session = factory.getCurrentSession();
 
         Gson gson = new Gson();
@@ -116,7 +118,13 @@ public class AdminController {
 
     @RequestMapping(value = "/forcePriceChanges")
     //TODO: zwrot informacji
-    public void forceUpdate(){
+    public ResponseEntity<String> forceUpdate(){
+        SessionFactory factory = new Configuration()
+                .addAnnotatedClass(AssetEntity.class)
+                .addAnnotatedClass(PortfolioEntity.class)
+                .addAnnotatedClass(StockEntity.class)
+                .addAnnotatedClass(UserEntity.class)
+                .buildSessionFactory();
         Session session = factory.getCurrentSession();
         List<StockEntity> stocks;
 
@@ -131,7 +139,7 @@ public class AdminController {
             //exclude cash
             for(StockEntity stock : stocks){
                 if(!stock.getName().equals("Cash")) {
-                    double percentChange = r.nextDouble();
+                    double percentChange = r.nextDouble()/10;
                     boolean isRaising = r.nextBoolean();
 
                     if (isRaising) {
@@ -142,9 +150,15 @@ public class AdminController {
                     session.update(stock);      //a lot of potential trouble
                 }
             }
-
             session.getTransaction().commit();
             session.close();
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Price update successful");
+        }
+        catch(Exception ex){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Price update failed");
         }
         finally {
             factory.close(); //potential errors

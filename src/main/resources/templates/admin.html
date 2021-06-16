@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin panel - plebs get out</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="topnav">
@@ -13,6 +14,7 @@
         <a href="/logout">Logout</a>
     </div>
     <div id="deleteUserFormDiv">
+        <h2>Delete user</h2>
         <form onsubmit="deleteUser()">
             <label for="deleteUserId">Id of user you want to delete:</label><br>
             <input type="number" id="deleteUserId" name="deleteUserId"><br>
@@ -21,9 +23,10 @@
     </div>
     <br>
     <div id="createStockFormDiv">
+        <h2>Create stock</h2>
         <form onsubmit="createStock()">
             <label for="nameId">Name:</label><br>
-            <input type="number" id="nameId" name="nameId"><br>
+            <input type="text" id="nameId" name="nameId"><br>
             <label for="currentPriceId">Current Price</label><br>
             <input type="number" id="currentPriceId" name="currentPriceId">
             <input type="submit" value="Submit">
@@ -31,13 +34,14 @@
     </div>
 
     <div id="deleteStockFormDiv">
+        <h2>Delete stock</h2>
         <form onsubmit="deleteStock()">
             <label for="deleteStockId">Id of stock you want to delete:</label><br>
             <input type="number" id="deleteStockId" name="deleteStockId"><br>
             <input type="submit" value="Submit">
         </form>
     </div>
-
+    <h2>Change stock prices</h2>
     <button onclick="forceChanges()">Simulate stock changes</button>
 
 </body>
