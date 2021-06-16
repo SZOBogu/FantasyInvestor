@@ -12,14 +12,20 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class StockService {
-    private final SessionFactory factory = new Configuration()
-            .addAnnotatedClass(AssetEntity.class)
-            .addAnnotatedClass(PortfolioEntity.class)
-            .addAnnotatedClass(StockEntity.class)
-            .addAnnotatedClass(UserEntity.class)
-            .buildSessionFactory();
+//    private final SessionFactory factory = new Configuration()
+//            .addAnnotatedClass(AssetEntity.class)
+//            .addAnnotatedClass(PortfolioEntity.class)
+//            .addAnnotatedClass(StockEntity.class)
+//            .addAnnotatedClass(UserEntity.class)
+//            .buildSessionFactory();
 
     public StockEntity getStockById(int id){
+        SessionFactory factory = new Configuration()
+                .addAnnotatedClass(AssetEntity.class)
+                .addAnnotatedClass(PortfolioEntity.class)
+                .addAnnotatedClass(StockEntity.class)
+                .addAnnotatedClass(UserEntity.class)
+                .buildSessionFactory();
         Session session = factory.getCurrentSession();
 
         try {
@@ -35,6 +41,12 @@ public class StockService {
     }
 
     public StockEntity getStockByName(String name){
+        SessionFactory factory = new Configuration()
+                .addAnnotatedClass(AssetEntity.class)
+                .addAnnotatedClass(PortfolioEntity.class)
+                .addAnnotatedClass(StockEntity.class)
+                .addAnnotatedClass(UserEntity.class)
+                .buildSessionFactory();
         Session session = factory.getCurrentSession();
 
         try {

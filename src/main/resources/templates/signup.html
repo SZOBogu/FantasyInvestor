@@ -34,7 +34,7 @@
         passwordInput = document.getElementById("password");
 
         var xhr = new XMLHttpRequest();
-        url = "http://localhost:8080/signup";
+        url = "http://localhost:8080/createUser";
         xhr.open("POST", url, false);
 
         signupRequest = new SignupRequest(usernameInput.value, passwordInput.value);

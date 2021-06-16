@@ -42,16 +42,14 @@ public class UserController {
     @Autowired
     private StockService stockService;
 
-    private final SessionFactory factory = new Configuration()
-            .addAnnotatedClass(AssetEntity.class)
-            .addAnnotatedClass(PortfolioEntity.class)
-            .addAnnotatedClass(StockEntity.class)
-            .addAnnotatedClass(UserEntity.class)
-            .buildSessionFactory();
-
     @GetMapping(value = "/portfolio", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getPortfolioResponse(Authentication authentication){
-
+        SessionFactory factory = new Configuration()
+                .addAnnotatedClass(AssetEntity.class)
+                .addAnnotatedClass(PortfolioEntity.class)
+                .addAnnotatedClass(StockEntity.class)
+                .addAnnotatedClass(UserEntity.class)
+                .buildSessionFactory();
         Gson gson = new Gson();
         Session session = factory.getCurrentSession();
 
@@ -84,6 +82,12 @@ public class UserController {
 
     @GetMapping(value = "/portfolio/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String>  getPortfolio(@PathVariable int id){
+        SessionFactory factory = new Configuration()
+                .addAnnotatedClass(AssetEntity.class)
+                .addAnnotatedClass(PortfolioEntity.class)
+                .addAnnotatedClass(StockEntity.class)
+                .addAnnotatedClass(UserEntity.class)
+                .buildSessionFactory();
         Gson gson = new Gson();
         Session session = factory.getCurrentSession();
 
@@ -114,6 +118,12 @@ public class UserController {
 
     @GetMapping(value = "/stocks", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getStockList(){
+        SessionFactory factory = new Configuration()
+                .addAnnotatedClass(AssetEntity.class)
+                .addAnnotatedClass(PortfolioEntity.class)
+                .addAnnotatedClass(StockEntity.class)
+                .addAnnotatedClass(UserEntity.class)
+                .buildSessionFactory();
         Session session = factory.getCurrentSession();
         Gson gson = new Gson();
         StockListResponse response = new StockListResponse();
@@ -145,6 +155,12 @@ public class UserController {
 
     @GetMapping(value = "/stock/{id}")
     public String getStockInfo(@ModelAttribute("stock") StockEntity stockEntity, Model model, @PathVariable int id){
+        SessionFactory factory = new Configuration()
+                .addAnnotatedClass(AssetEntity.class)
+                .addAnnotatedClass(PortfolioEntity.class)
+                .addAnnotatedClass(StockEntity.class)
+                .addAnnotatedClass(UserEntity.class)
+                .buildSessionFactory();
         Session session = factory.getCurrentSession();
         System.out.println("UserController: /stock/{id} ");
         try{
@@ -165,6 +181,12 @@ public class UserController {
 
     @PostMapping(value = "/stock/{id}/sell", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> sellStock(@PathVariable int id, HttpServletRequest request, Authentication authentication){
+        SessionFactory factory = new Configuration()
+                .addAnnotatedClass(AssetEntity.class)
+                .addAnnotatedClass(PortfolioEntity.class)
+                .addAnnotatedClass(StockEntity.class)
+                .addAnnotatedClass(UserEntity.class)
+                .buildSessionFactory();
         Session session = factory.getCurrentSession();
         UserEntity loggedUser = (UserEntity) authentication.getPrincipal();
 
@@ -226,6 +248,12 @@ public class UserController {
 
     @PostMapping(value = "/stock/{id}/buy", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> buyStock(@PathVariable int id, HttpServletRequest request, Authentication authentication){
+        SessionFactory factory = new Configuration()
+                .addAnnotatedClass(AssetEntity.class)
+                .addAnnotatedClass(PortfolioEntity.class)
+                .addAnnotatedClass(StockEntity.class)
+                .addAnnotatedClass(UserEntity.class)
+                .buildSessionFactory();
         Session session = factory.getCurrentSession();
         UserEntity loggedUser = (UserEntity) authentication.getPrincipal();
 
@@ -309,6 +337,12 @@ public class UserController {
 
     @PostMapping(value = "/createUser", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createUser(HttpServletRequest request){
+        SessionFactory factory = new Configuration()
+                .addAnnotatedClass(AssetEntity.class)
+                .addAnnotatedClass(PortfolioEntity.class)
+                .addAnnotatedClass(StockEntity.class)
+                .addAnnotatedClass(UserEntity.class)
+                .buildSessionFactory();
         Session session = factory.getCurrentSession();
 
         Gson gson = new Gson();
