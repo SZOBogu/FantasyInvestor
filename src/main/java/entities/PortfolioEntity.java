@@ -8,7 +8,7 @@ import java.util.List;
 public class PortfolioEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_portfolio")
+    @Column(name = "portfolio_id")
     private int id;
 
 

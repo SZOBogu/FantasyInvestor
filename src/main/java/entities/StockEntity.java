@@ -4,11 +4,12 @@ import javax.persistence.*;
 import java.util.List;
 import java.util.Objects;
 
+@Entity
 @Table(name = "stock", schema = "FantasyInvestor")
 public class StockEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_stock")
+    @Column(name = "stock_id")
     private int id;
 
     @Basic
@@ -35,8 +36,9 @@ public class StockEntity {
     @Column(name = "priceAtTheStartOfTheYear")
     private double priceAtTheStartOfTheYear;
 
-    @OneToMany(mappedBy="cart", cascade = {CascadeType.DETACH, CascadeType.MERGE,
+    @OneToMany(mappedBy="assetEntity", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.REFRESH})
+    @JoinColumn(name="stock_id")
     private List<AssetEntity> assets;
 
     public int getId() {

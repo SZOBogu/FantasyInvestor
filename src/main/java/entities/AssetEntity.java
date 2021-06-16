@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class AssetEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_asset")
+    @Column(name = "asset_id")
     private int id;
 
     @Basic
@@ -15,7 +15,7 @@ public class AssetEntity {
     private int quantity;
 
     @Basic
-    @Column(name = "buyprice")
+    @Column(name = "buyPrice")
     private double buyPrice;
 
     @ManyToOne(targetEntity = StockEntity.class,
