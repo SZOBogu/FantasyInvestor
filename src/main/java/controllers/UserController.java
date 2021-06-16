@@ -42,8 +42,25 @@ public class UserController {
     @Autowired
     private StockService stockService;
 
-    @GetMapping(value = "/portfolio", produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value="/portfolio")
+    public String getPortfolioPage(){
+        return "portfolio";
+    }
+
+    @RequestMapping(value="/stocks")
+    public String getStockPage(){
+        return "stocks";
+    }
+
+    @RequestMapping(value = "/signup")
+    public String getSignupForm(){
+        return "signup";
+    }
+
+    @GetMapping(value = "/getPortfolio", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getPortfolioResponse(Authentication authentication){
+        System.out.println("UserController: getPortfolioResponse");
+
         SessionFactory factory = new Configuration()
                 .addAnnotatedClass(AssetEntity.class)
                 .addAnnotatedClass(PortfolioEntity.class)
@@ -81,7 +98,7 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/portfolio/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/getPortfolio/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String>  getPortfolio(@PathVariable int id){
         SessionFactory factory = new Configuration()
                 .addAnnotatedClass(AssetEntity.class)
@@ -104,11 +121,11 @@ public class UserController {
             PortfolioEntity portfolioEntity = user.getPortfolio();
             PortfolioResponse response = new PortfolioResponse(userId, username, portfolioEntity);
 
-            System.out.println("UserController: getPortfolio/{id} response: " + response);
-
             String json = gson.toJson(response);
             session.getTransaction().commit();
             session.close();
+
+            System.out.println("UserController: getPortfolio/{id} JSON response: " + json);
 
             return ResponseEntity.status(HttpStatus.OK)
                     .body(json);
@@ -118,7 +135,7 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/stocks", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/stockList", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getStockList(){
         SessionFactory factory = new Configuration()
                 .addAnnotatedClass(AssetEntity.class)
@@ -146,7 +163,7 @@ public class UserController {
             System.out.println("UserController: /stocks response: " + response);
 
             session.getTransaction().commit();
-
+            session.close();
             return ResponseEntity.status(HttpStatus.OK)
                     .body(json);
         }
@@ -314,6 +331,7 @@ public class UserController {
                     portfolio.getAssets().add(boughtAsset);
                     session.update(portfolio);          //TODO: test
                     session.getTransaction().commit();
+                    session.close();
 
                     return ResponseEntity.status(HttpStatus.OK)
                             .body("Stock bought");
@@ -408,11 +426,5 @@ public class UserController {
         finally {
             factory.close();
         }
-
-    }
-
-    @RequestMapping(value = "/signup")
-    public String getSignupForm(){
-        return "signup";
     }
 }

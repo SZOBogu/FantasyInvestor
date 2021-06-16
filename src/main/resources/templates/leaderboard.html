@@ -7,9 +7,9 @@
 <body>
     <div class="topnav">
         <a  href="/">Home</a>
-        <a href="portfolio.html">Portfolio</a>
-        <a href="stocks.html">Stocks</a>
-        <a href="leaderboard.html">Leaderboard</a>
+        <a href="/portfolio">Portfolio</a>
+        <a href="/stocks">Stocks</a>
+        <a href="/leaderboard">Leaderboard</a>
         <a href="/logout">Logout</a>
     </div>
 
@@ -25,44 +25,41 @@
 
     function createLeaderboardTable(){
         var tableDiv = document.getElementById("leaderboardTable");
-        var tbl = document.createElement("table");
-        tbl.style.width = "100%";
-        tbl.setAttribute("border", "1");
+        var table = document.createElement("table");
+        table.style.width = "100%";
+        table.setAttribute("border", "1");
         var tbdy = document.createElement("tbody");
 
         var xhr = new XMLHttpRequest();
-        var url = "http://localhost:8080/leaderboard";
+        var url = "http://localhost:8080/leaderboard/getLeaderboard";
         xhr.open("GET", url, false);
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.send();
 
         var json = JSON.parse(xhr.responseText);
+        var leaderboardData = json["leaderboardData"];
 
         for (let i = 0; i < json["leaderboardData"].length; i++) {
-            table = document.getElementById("dashboardTable");
             row = document.createElement("tr");
             cellId = document.createElement("td");
             cellName = document.createElement("td");
             cellPortfolioValue = document.createElement("td");
 
-            textId = document.createTextNode(json["leaderboardData"].userId);
-            textName = document.createTextNode(json["leaderboardData"].username);
-            textBuyingPrice = document.createTextNode(json["leaderboardData"].portfolioValue);
+            textId = document.createTextNode(leaderboardData[i].userId);
+            textName = document.createTextNode(leaderboardData[i].username);
+            textPortfolioValue = document.createTextNode(leaderboardData[i].portfolioValue);
 
             cellId.appendChild(textId);
             cellName.appendChild(textName);
-            cellCurrentPrice.appendChild(textBuyingPrice);
-            cellBuyingPrice.appendChild(textCurrentPrice);
+            cellPortfolioValue.appendChild(textPortfolioValue);
 
             row.appendChild(cellId);
             row.appendChild(cellName);
-            row.appendChild(cellCurrentPrice);
-            row.appendChild(cellBuyingPrice);
+            row.appendChild(cellPortfolioValue);
 
             table.appendChild(row);
         }
+        tableDiv.appendChild(table);
     }
-
-
 </script>
 </html>

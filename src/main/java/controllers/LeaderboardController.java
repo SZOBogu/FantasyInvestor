@@ -24,7 +24,13 @@ import java.util.List;
 @Controller
 @RequestMapping("/leaderboard")
 public class LeaderboardController {
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+
+    @RequestMapping
+    public String getPage(){
+        return "leaderboard";
+    }
+
+    @GetMapping(value = "/getLeaderboard" ,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getLeaderboard(){
         SessionFactory factory = new Configuration()
                 .addAnnotatedClass(AssetEntity.class)

@@ -7,10 +7,10 @@
 <body>
     <div class="topnav">
         <a  href="/">Home</a>
-        <a href="portfolio.html">Portfolio</a>
-        <a href="stocks.html">Stocks</a>
-        <a href="leaderboard.html">Leaderboard</a>
-        <a href="/logout">About</a>
+        <a href="/portfolio">Portfolio</a>
+        <a href="/stocks">Stocks</a>
+        <a href="/leaderboard">Leaderboard</a>
+        <a href="/logout">Logout</a>
     </div>
 
     <div id="stockListDiv"></div>
@@ -97,13 +97,13 @@
 
     function createStocksTable() {
         var tableDiv = document.getElementById("stockListDiv");
-        var tbl = document.createElement("table");
-        tbl.style.width = "100%";
-        tbl.setAttribute("border", "1");
+        var table = document.createElement("table");
+        table.style.width = "100%";
+        table.setAttribute("border", "1");
         var tbdy = document.createElement("tbody");
 
         var xhr = new XMLHttpRequest();
-        var url = "http://localhost:8080/stocks";
+        var url = "http://localhost:8080/stockList";
         xhr.open("GET", url, false);
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
         xhr.send();
@@ -112,7 +112,6 @@
         var stockData = json["stockData"];
 
         for (let i = 0; i < json["stockData"].length; i++) {
-            table = document.getElementById("dashboardTable");
             row = document.createElement("tr");
             cellId = document.createElement("td");
             cellName = document.createElement("td");
