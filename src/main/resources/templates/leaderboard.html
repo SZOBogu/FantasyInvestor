@@ -19,6 +19,50 @@
     <p id = "feedback"></p>
 </body>
 <script>
+    window.onload = function() {
+        createLeaderboardTable();
+    };
+
+    function createLeaderboardTable(){
+        var tableDiv = document.getElementById("leaderboardTable");
+        var tbl = document.createElement("table");
+        tbl.style.width = "100%";
+        tbl.setAttribute("border", "1");
+        var tbdy = document.createElement("tbody");
+
+        var xhr = new XMLHttpRequest();
+        var url = "http://localhost:8080/leaderboard";
+        xhr.open("GET", url, false);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send();
+
+        var json = JSON.parse(xhr.responseText);
+
+        for (let i = 0; i < json["leaderboardData"].length; i++) {
+            table = document.getElementById("dashboardTable");
+            row = document.createElement("tr");
+            cellId = document.createElement("td");
+            cellName = document.createElement("td");
+            cellPortfolioValue = document.createElement("td");
+
+            textId = document.createTextNode(json["leaderboardData"].userId);
+            textName = document.createTextNode(json["leaderboardData"].username);
+            textBuyingPrice = document.createTextNode(json["leaderboardData"].portfolioValue);
+
+            cellId.appendChild(textId);
+            cellName.appendChild(textName);
+            cellCurrentPrice.appendChild(textBuyingPrice);
+            cellBuyingPrice.appendChild(textCurrentPrice);
+
+            row.appendChild(cellId);
+            row.appendChild(cellName);
+            row.appendChild(cellCurrentPrice);
+            row.appendChild(cellBuyingPrice);
+
+            table.appendChild(row);
+        }
+    }
+
 
 </script>
 </html>

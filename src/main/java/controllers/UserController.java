@@ -16,7 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import pojos.StockDataDigest;
@@ -54,11 +56,6 @@ public class UserController {
     public ResponseEntity<String> getPortfolioResponse(Authentication authentication){
         Gson gson = new Gson();
         Session session = factory.getCurrentSession();
-        //return authentication.getName();
-
-        /*
-        the Spring Security principal can only be retrieved as an Object and needs to be cast to the correct UserDetails instance:
-        */
 
         UserEntity loggedUser = (UserEntity) authentication.getPrincipal();
 
@@ -66,10 +63,11 @@ public class UserController {
             session.getTransaction().begin();
             UserEntity user = session.get(UserEntity.class, loggedUser.getId());
 
-            PortfolioResponse response = new PortfolioResponse();
-            response.setUsername(user.getUsername());
-            response.setId(user.getId());
-            response.setPortfolio(user.getPortfolio());
+
+            String username = user.getUsername();
+            int userId = user.getId();
+            PortfolioEntity portfolioEntity = user.getPortfolio();
+            PortfolioResponse response = new PortfolioResponse(userId, username, portfolioEntity);
 
             String json = gson.toJson(response);
 			session.close();
@@ -91,10 +89,10 @@ public class UserController {
             session.getTransaction().begin();
             UserEntity user = session.get(UserEntity.class, id);
 
-            PortfolioResponse response = new PortfolioResponse();
-            response.setUsername(user.getUsername());
-            response.setId(user.getId());
-            response.setPortfolio(user.getPortfolio());
+            String username = user.getUsername();
+            int userId = user.getId();
+            PortfolioEntity portfolioEntity = user.getPortfolio();
+            PortfolioResponse response = new PortfolioResponse(userId, username, portfolioEntity);
 
             String json = gson.toJson(response);
             session.close();
@@ -133,23 +131,22 @@ public class UserController {
         }
     }
 
-    @GetMapping(value = "/stock/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> getStockInfo(@PathVariable int id){
+    @GetMapping(value = "/stock/{id}")
+    public String getStockInfo(@ModelAttribute("stock") StockEntity stockEntity, Model model, @PathVariable int id){
         Session session = factory.getCurrentSession();
         Gson gson = new Gson();
 
         try{
             session.getTransaction().begin();
             StockEntity stock = session.get(StockEntity.class, id);
-            String json = gson.toJson(stock);
+            model.addAttribute("stock", stock);
             session.getTransaction().commit();
-
-            return ResponseEntity.status(HttpStatus.OK)
-                    .body(json);
+            session.close();
         }
         finally {
             factory.close();
         }
+        return "stock";
     }
 
     @PostMapping(value = "/stock/{id}/sell", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -183,6 +180,7 @@ public class UserController {
                         asset.setQuantity(asset.getQuantity() - sellStockRequest.getQuantity());
                         session.update(asset);
                     }
+                    //TODO: fix, subtracting cash only after deleting stock, handle too much stocks to sell
                     else if(asset.getStock().getName().equals("Cash")){
                         asset.setQuantity(asset.getQuantity() + price);
                         session.update(asset);
@@ -304,9 +302,8 @@ public class UserController {
             user.setUsername(signupRequest.getUsername());
             user.setPassword(signupRequest.getPassword());
 
-            if(signupRequest.getUsername().equals("admin")){
+            if(signupRequest.getUsername().equals("admin"))
                 user.setRole("ADMIN");
-            }
             else
                 user.setRole("USER");
 

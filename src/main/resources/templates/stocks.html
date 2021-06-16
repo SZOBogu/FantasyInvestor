@@ -14,5 +14,126 @@
     </div>
 
     <div id="stockListDiv"></div>
+    <div id="buyFormDiv">
+        <form onsubmit="buy()">
+            <label for="buyId">Id of stock you want to buy:</label><br>
+            <input type="number" id="buyId" name="buyId"><br>
+            <label for="buyQuantity">How many would you buy?</label><br>
+            <input type="number" id="buyQuantity" name="buyQuantity">
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <div id="sellFormDiv">
+        <form onsubmit="sell()">
+            <label for="sellId">Id of stock you want to buy:</label><br>
+            <input type="number" id="sellId" name="sellId"><br>
+            <label for="sellQuantity">How many would you buy?</label><br>
+            <input type="number" id="sellQuantity" name="sellQuantity">
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+    <p id = "feedback"></p>
 </body>
+
+<script>
+    window.onload = function() {
+        createStocksTable();
+    };
+
+    class StockInfo{
+        constructor(id, name, currentPrice, priceAtTheStartOfTheDay, priceAtTheStartOfTheWeek,
+                    priceAtTheStartOfTheMonth, priceAtTheStartOfTheYear) {
+            this.id = id;
+            this.name = name;
+            this.currentPrice = currentPrice;
+            this.priceAtTheStarOfTheDay = priceAtTheStartOfTheDay;
+            this.priceAtTheStartOfTheWeek = priceAtTheStartOfTheWeek;
+            this.priceAtTheStartOfTheMonth = priceAtTheStartOfTheMonth;
+            this.priceAtTheStartOfTheYear = priceAtTheStartOfTheYear;
+        }
+    }
+
+    class StockOperationRequest{
+        constructor(id, quantity) {
+            this.id = id;
+            this.quantity = quantity;
+        }
+    }
+
+    class StockInfoDigest{
+        constructor(id, name, price) {
+            this.id = id;
+            this.name = name;
+            this.price = price;
+        }
+    }
+
+    function buy(){
+        var xhr = new XMLHttpRequest();
+        var url = "http://localhost:8080/stock/" + document.getElementById("buyId").value +"/buy";
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+        const buyRequest = new StockOperationRequest(document.getElementById("buyId").value, document.getElementById("buyQuantity").value);
+        xhr.onreadystatechange = function () {
+            document.querySelector('html').innerHTML = xhr.responseText;
+        }
+        xhr.send(JSON.stringify(buyRequest));
+    }
+
+    function sell(){
+        var xhr = new XMLHttpRequest();
+        var url = "http://localhost:8080/stock/" + document.getElementById("sellId").value +"/sell";
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+        const sellRequest = new StockOperationRequest(document.getElementById("sellId").value, document.getElementById("sellQuantity").value);
+        xhr.onreadystatechange = function () {
+            document.querySelector('html').innerHTML = xhr.responseText;
+        }
+        xhr.send(JSON.stringify(sellRequest));
+    }
+
+    function createStocksTable() {
+        var tableDiv = document.getElementById("stockListDiv");
+        var tbl = document.createElement("table");
+        tbl.style.width = "100%";
+        tbl.setAttribute("border", "1");
+        var tbdy = document.createElement("tbody");
+
+        var xhr = new XMLHttpRequest();
+        var url = "http://localhost:8080/stocks";
+        xhr.open("GET", url, false);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send();
+
+        var json = JSON.parse(xhr.responseText);
+        var stockData = json["stockData"];
+
+        for (let i = 0; i < json["stockData"].length; i++) {
+            table = document.getElementById("dashboardTable");
+            row = document.createElement("tr");
+            cellId = document.createElement("td");
+            cellName = document.createElement("td");
+            cellPrice = document.createElement("td");
+
+            textId = document.createTextNode(stockData[i].id);
+            textName = document.createTextNode(stockData[i].name);
+            textPrice = document.createTextNode(stockData[i].price);
+
+            cellId.appendChild(textId);
+            cellName.appendChild(textName);
+            cellPrice.appendChild(textPrice);
+
+            row.appendChild(cellId);
+            row.appendChild(cellName);
+            row.appendChild(cellPrice);
+
+            table.appendChild(row);
+        }
+        tableDiv.appendChild(table);
+    }
+</script>
+
 </html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin panel - plebs get out</title>
+</head>
+<body>
+    <div class="topnav">
+        <a  href="/">Home</a>
+        <a href="portfolio.html">Portfolio</a>
+        <a href="stocks.html">Stocks</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+    <div id="deleteUserFormDiv">
+        <form onsubmit="deleteUser()">
+            <label for="deleteUserId">Id:</label><br>
+            <input type="number" id="deleteUserId" name="deleteUserId"><br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <div id="createStockFormDiv">
+        <form onsubmit="createStock()">
+            <label for="nameId">Name:</label><br>
+            <input type="number" id="nameId" name="nameId"><br>
+            <label for="currentPriceId">Current Price</label><br>
+            <input type="number" id="currentPriceId" name="currentPriceId">
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <div id="deleteStockFormDiv">
+        <form onsubmit="deleteStock()">
+            <label for="deleteStockId">Id of stock you want to delete:</label><br>
+            <input type="number" id="deleteStockId" name="deleteStockId"><br>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+
+    <button onclick="forceChanges()">Simulate stock changes</button>
+
+</body>
+
+<script>
+    class Stock{
+        constructor(name, currentPrice) {
+            this.name = name;
+            this.currentPrice = currentPrice;
+            this.priceAtTheStartOfTheDay = currentPrice;
+            this.priceAtTheStartOfTheWeek = currentPrice;
+            this.priceAtTheStartOfTheMonth = currentPrice;
+            this.priceAtTheStartOfTheYear = currentPrice;
+        }
+    }
+
+    function deleteUser(){
+        var xhr = new XMLHttpRequest();
+        var url = "http://localhost:8080/admin/deleteUser/" + document.getElementById("deleteUserId").value;
+        xhr.open("DELETE", url, true);
+        xhr.send(null);
+    }
+
+    function createStock(){
+        var stock = new Stock(document.getElementById("nameId").value, document.getElementById("currentPriceId").value);
+
+        var xhr = new XMLHttpRequest();
+        var url = "http://localhost:8080/admin/createStock";
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+
+        xhr.send(JSON.stringify(stock));
+    }
+
+    function deleteStock(){
+        var xhr = new XMLHttpRequest();
+        var url = "http://localhost:8080/admin/deleteStock/" + document.getElementById("deleteStockId").value;
+        xhr.open("DELETE", url, true);
+        xhr.send(null);
+    }
+
+    function forceChanges(){
+        var xhr = new XMLHttpRequest();
+        var url = "http://localhost:8080/admin/forcePriceChanges";
+        xhr.open("POST", url, true);
+        xhr.send(null);
+    }
+</script>
+</html>

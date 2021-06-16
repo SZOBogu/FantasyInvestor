@@ -107,6 +107,7 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/forcePriceChanges")
+    //TODO: zwrot informacji
     public void forceUpdate(){
         Session session = factory.getCurrentSession();
         List<StockEntity> stocks;

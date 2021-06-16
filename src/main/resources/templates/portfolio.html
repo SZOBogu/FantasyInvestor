@@ -5,12 +5,76 @@
     <title>Portfolio</title>
 </head>
 <body>
+    <div class="topnav">
+        <a  href="/">Home</a>
+        <a href="portfolio.html">Portfolio</a>
+        <a href="stocks.html">Stocks</a>
+        <a href="leaderboard.html">Leaderboard</a>
+        <a href="/logout">Logout</a>
+    </div>
+
+<h1 id="userIdh1"></h1>
+<h1 id="usernameh2"></h1>
 <div id="portfolio">
 
 </div>
 </body>
 
 <script>
+    window.onload = function() {
+        createPortfolioTable();
+    };
+
+    function createPortfolioTable(){
+        var tableDiv = document.getElementById("stockListDiv");
+        var tbl = document.createElement("table");
+        tbl.style.width = "100%";
+        tbl.setAttribute("border", "1");
+        var tbdy = document.createElement("tbody");
+
+        var xhr = new XMLHttpRequest();
+        var url = "http://localhost:8080/portfolio";
+        xhr.open("GET", url, false);
+        xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+        xhr.send();
+
+        var json = JSON.parse(xhr.responseText);
+        var assetData = json["assetData"];
+
+        document.getElementById("userIdh1").innerHTML = json["id"];
+        document.getElementById("usernameh2").innerHTML = json["username"];
+
+        for (let i = 0; i < json["assetData"].length; i++) {
+            table = document.getElementById("dashboardTable");
+            row = document.createElement("tr");
+            cellId = document.createElement("td");
+            cellName = document.createElement("td");
+            cellCurrentPrice = document.createElement("td");
+            cellBuyingPrice = document.createElement("td");
+            cellQuantity = document.createElement("td");
+            cellTotal = document.createElement("td");
+
+            textId = document.createTextNode(json["leaderboardData"][i].id);
+            textName = document.createTextNode(json["leaderboardData"][i].name);
+            textBuyingPrice = document.createTextNode(json["leaderboardData"][i].buyingPrice);
+            textCurrentPrice = document.createTextNode(json["leaderboardData"][i].currentPrice);
+            textQuantity = document.createTextNode(json["leaderboardData"][i].quantity);
+            textTotal = document.createTextNode((json["leaderboardData"][i].currentPrice * json["leaderboardData"][i].quantity).toString());
+
+            cellId.appendChild(textId);
+            cellName.appendChild(textName);
+            cellCurrentPrice.appendChild(textBuyingPrice);
+            cellBuyingPrice.appendChild(textCurrentPrice);
+
+            row.appendChild(cellId);
+            row.appendChild(cellName);
+            row.appendChild(cellCurrentPrice);
+            row.appendChild(cellBuyingPrice);
+
+            table.appendChild(row);
+        }
+        tableDiv.appendChild(table);
+    }
 
 </script>
 

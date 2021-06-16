@@ -20,20 +20,20 @@ public class StockEntity {
     private double currentPrice;
 
     @Basic
-    @Column(name = "priceAtTheStarOfTheDay")
-    private double priceAtTheStarOfTheDay;
+    @Column(name = "priceAtTheStartOfTheDay")
+    private double priceAtTheStartOfTheDay;
 
     @Basic
-    @Column(name = "priceAtTheStarOfTheWeek")
-    private double priceAtTheStarOfTheWeek;
+    @Column(name = "priceAtTheStartOfTheWeek")
+    private double priceAtTheStartOfTheWeek;
 
     @Basic
-    @Column(name = "priceAtTheStarOfTheMonth")
-    private double priceAtTheStarOfTheMonth;
+    @Column(name = "priceAtTheStartOfTheMonth")
+    private double priceAtTheStartOfTheMonth;
 
     @Basic
-    @Column(name = "priceAtTheStarOfTheYear")
-    private double priceAtTheStarOfTheYear;
+    @Column(name = "priceAtTheStartOfTheYear")
+    private double priceAtTheStartOfTheYear;
 
     @OneToMany(mappedBy="cart", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.REFRESH})
@@ -63,36 +63,36 @@ public class StockEntity {
         this.currentPrice = currentPrice;
     }
 
-    public double getPriceAtTheStarOfTheDay() {
-        return priceAtTheStarOfTheDay;
+    public double getPriceAtTheStartOfTheDay() {
+        return priceAtTheStartOfTheDay;
     }
 
-    public void setPriceAtTheStarOfTheDay(double priceAtTheStarOfTheDay) {
-        this.priceAtTheStarOfTheDay = priceAtTheStarOfTheDay;
+    public void setPriceAtTheStartOfTheDay(double priceAtTheStartOfTheDay) {
+        this.priceAtTheStartOfTheDay = priceAtTheStartOfTheDay;
     }
 
-    public double getPriceAtTheStarOfTheWeek() {
-        return priceAtTheStarOfTheWeek;
+    public double getPriceAtTheStartOfTheWeek() {
+        return priceAtTheStartOfTheWeek;
     }
 
-    public void setPriceAtTheStarOfTheWeek(double priceAtTheStarOfTheWeek) {
-        this.priceAtTheStarOfTheWeek = priceAtTheStarOfTheWeek;
+    public void setPriceAtTheStartOfTheWeek(double priceAtTheStartOfTheWeek) {
+        this.priceAtTheStartOfTheWeek = priceAtTheStartOfTheWeek;
     }
 
-    public double getPriceAtTheStarOfTheMonth() {
-        return priceAtTheStarOfTheMonth;
+    public double getPriceAtTheStartOfTheMonth() {
+        return priceAtTheStartOfTheMonth;
     }
 
-    public void setPriceAtTheStarOfTheMonth(double priceAtTheStarOfTheMonth) {
-        this.priceAtTheStarOfTheMonth = priceAtTheStarOfTheMonth;
+    public void setPriceAtTheStartOfTheMonth(double priceAtTheStartOfTheMonth) {
+        this.priceAtTheStartOfTheMonth = priceAtTheStartOfTheMonth;
     }
 
-    public double getPriceAtTheStarOfTheYear() {
-        return priceAtTheStarOfTheYear;
+    public double getPriceAtTheStartOfTheYear() {
+        return priceAtTheStartOfTheYear;
     }
 
-    public void setPriceAtTheStarOfTheYear(double priceAtTheStarOfTheYear) {
-        this.priceAtTheStarOfTheYear = priceAtTheStarOfTheYear;
+    public void setPriceAtTheStartOfTheYear(double priceAtTheStartOfTheYear) {
+        this.priceAtTheStartOfTheYear = priceAtTheStartOfTheYear;
     }
 
     public List<AssetEntity> getAssets() {

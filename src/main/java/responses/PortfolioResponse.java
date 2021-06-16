@@ -1,11 +1,26 @@
 package responses;
 
+import entities.AssetEntity;
 import entities.PortfolioEntity;
+import pojos.AssetDataDigest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class PortfolioResponse {
-    private String username;
     private int id;
-    private PortfolioEntity portfolio;
+    private String username;
+    private List<AssetDataDigest> assetData;
+
+    public PortfolioResponse(int id, String username, PortfolioEntity portfolio) {
+        this.id = id;
+        this.username = username;
+        this.assetData = new ArrayList<>();
+
+        for(AssetEntity asset : portfolio.getAssets()){
+            this.assetData.add(new AssetDataDigest(asset));
+        }
+    }
 
     public String getUsername() {
         return username;
@@ -23,11 +38,11 @@ public class PortfolioResponse {
         this.id = id;
     }
 
-    public PortfolioEntity getPortfolio() {
-        return portfolio;
+    public List<AssetDataDigest> getAssetData() {
+        return assetData;
     }
 
-    public void setPortfolio(PortfolioEntity portfolio) {
-        this.portfolio = portfolio;
+    public void setAssetData(List<AssetDataDigest> assetData) {
+        this.assetData = assetData;
     }
 }
