@@ -33,6 +33,8 @@ public class LeaderboardController {
                 .addAnnotatedClass(UserEntity.class)
                 .buildSessionFactory();
 
+        System.out.println("LeaderboardController got request");
+
         Session session = factory.getCurrentSession();
         Gson gson = new Gson();
 
@@ -50,6 +52,8 @@ public class LeaderboardController {
             String json = gson.toJson(response);
             session.getTransaction().commit();
             session.close();
+
+            System.out.println("LeaderboardController produced response: " + response);
 
             return ResponseEntity.status(HttpStatus.OK)
                     .body(json);

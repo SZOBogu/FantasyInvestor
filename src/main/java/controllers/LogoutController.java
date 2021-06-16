@@ -13,6 +13,8 @@ import javax.servlet.http.HttpSession;
 public class LogoutController {
     @RequestMapping(value = {"/logout/logout"})
     public String logoutDo(HttpServletRequest request, HttpServletResponse response){
+        System.out.println("LogoutController /logout/logout");
+
         HttpSession session= request.getSession(false);
         SecurityContextHolder.clearContext();
         session= request.getSession(false);

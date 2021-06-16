@@ -41,6 +41,8 @@ public class AdminController {
 
     @DeleteMapping(value = "/deleteUser/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable int id){
+        System.out.println("AdminController /deleteUser");
+
         try{
             userService.deleteUser(id);
             return ResponseEntity.status(HttpStatus.OK)
@@ -56,9 +58,9 @@ public class AdminController {
         Session session = factory.getCurrentSession();
         try{
             session.getTransaction().begin();
-            UserEntity user = session.get(UserEntity.class, id);
-            session.delete(user);
-            System.out.println("User: " + user.toString() + " deleted.");
+            StockEntity stock = session.get(StockEntity.class, id);
+            session.delete(stock);
+            System.out.println("AdminController Stock: " + stock.toString() + " deleted.");
             session.close();
 
             return ResponseEntity.status(HttpStatus.OK)
@@ -78,7 +80,7 @@ public class AdminController {
         String line = null;
 
         try{
-            System.out.println("Dashboard servlet received POST");
+
             BufferedReader reader = request.getReader();
             while ((line = reader.readLine()) != null)
                 jb.append(line);
@@ -86,7 +88,8 @@ public class AdminController {
             String jsonString = jb.toString();
 
             StockEntity stock = gson.fromJson(jsonString, StockEntity.class);
-            System.out.println(stock);
+
+            System.out.println("AdminController /createStock stock: " + stock);
 
             session.getTransaction().begin();
             session.save(stock);
@@ -111,6 +114,9 @@ public class AdminController {
     public void forceUpdate(){
         Session session = factory.getCurrentSession();
         List<StockEntity> stocks;
+
+        System.out.println("AdminController /forcePriceChanges stock: ");
+
         try{
             session.getTransaction().begin();
             stocks = session.createQuery(" from StockEntity").getResultList();

@@ -61,16 +61,16 @@ public class UserController {
             session.getTransaction().begin();
             UserEntity user = session.get(UserEntity.class, loggedUser.getId());
 
-
             String username = user.getUsername();
             int userId = user.getId();
             PortfolioEntity portfolioEntity = user.getPortfolio();
             PortfolioResponse response = new PortfolioResponse(userId, username, portfolioEntity);
 
+            System.out.println("UserController: getPortfolioResponse user: " + user);
+
             String json = gson.toJson(response);
 
-            System.out.println("UserController: getPortfolioResponse portfolio response: " + loggedUser.getId());
-
+            System.out.println("UserController: getPortfolioResponse portfolio response: " + response);
 
 			session.close();
 
@@ -87,14 +87,19 @@ public class UserController {
         Gson gson = new Gson();
         Session session = factory.getCurrentSession();
 
+        System.out.println("UserController: getPortfolio/{id}");
         try {
             session.getTransaction().begin();
             UserEntity user = session.get(UserEntity.class, id);
+
+            System.out.println("UserController: getPortfolio/{id} user: " + user);
 
             String username = user.getUsername();
             int userId = user.getId();
             PortfolioEntity portfolioEntity = user.getPortfolio();
             PortfolioResponse response = new PortfolioResponse(userId, username, portfolioEntity);
+
+            System.out.println("UserController: getPortfolio/{id} response: " + response);
 
             String json = gson.toJson(response);
             session.close();
@@ -112,7 +117,9 @@ public class UserController {
         Session session = factory.getCurrentSession();
         Gson gson = new Gson();
         StockListResponse response = new StockListResponse();
-        List<StockEntity> stocks = new ArrayList<>();
+        List<StockEntity> stocks;
+
+        System.out.println("UserController: /stocks ");
 
         try{
             session.getTransaction().begin();
@@ -123,6 +130,9 @@ public class UserController {
             }
 
             String json = gson.toJson(response);
+
+            System.out.println("UserController: /stocks response: " + response);
+
             session.getTransaction().commit();
 
             return ResponseEntity.status(HttpStatus.OK)
@@ -136,12 +146,14 @@ public class UserController {
     @GetMapping(value = "/stock/{id}")
     public String getStockInfo(@ModelAttribute("stock") StockEntity stockEntity, Model model, @PathVariable int id){
         Session session = factory.getCurrentSession();
-        Gson gson = new Gson();
-
+        System.out.println("UserController: /stock/{id} ");
         try{
             session.getTransaction().begin();
             StockEntity stock = session.get(StockEntity.class, id);
             model.addAttribute("stock", stock);
+
+            System.out.println("UserController: /stock/{id} stock: " + stock);
+
             session.getTransaction().commit();
             session.close();
         }
@@ -156,9 +168,11 @@ public class UserController {
         Session session = factory.getCurrentSession();
         UserEntity loggedUser = (UserEntity) authentication.getPrincipal();
 
+        System.out.println("UserController: /stock/{id}/sell loggedUser: " + loggedUser);
+
         Gson gson = new Gson();
         StringBuffer jb = new StringBuffer();
-        String line = null;
+        String line;
 
         try{
             session.getTransaction().begin();
@@ -166,6 +180,9 @@ public class UserController {
             PortfolioEntity portfolio = user.getPortfolio();
             List<AssetEntity> assets = portfolio.getAssets();
             StockEntity stock = session.get(StockEntity.class, id);
+
+            System.out.println("UserController: /stock/{id}/sell user: " + user);
+            System.out.println("UserController: /stock/{id}/sell stock: " + stock);
 
             BufferedReader reader = request.getReader();
             while ((line = reader.readLine()) != null)
@@ -175,6 +192,8 @@ public class UserController {
 
             SellStockRequest sellStockRequest = gson.fromJson(jsonString, SellStockRequest.class);
             int price = sellStockRequest.getQuantity() * sellStockRequest.getSellingPrice();
+
+            System.out.println("UserController: /stock/{id}/sell sellStockRequest: " + sellStockRequest);
 
             for(AssetEntity asset : assets){
                 if(asset.getStock().getName().equals(stock.getName())){
@@ -214,6 +233,8 @@ public class UserController {
         StringBuffer jb = new StringBuffer();
         String line = null;
 
+        System.out.println("UserController: /stock/{id}/buy loggedUser: " + loggedUser);
+
         try{
             session.getTransaction().begin();
 
@@ -222,14 +243,19 @@ public class UserController {
             StockEntity stock = session.get(StockEntity.class, id);
             int cash = AvailableCreditGetter.getAvailableCredit(portfolio);
 
+            System.out.println("UserController: /stock/{id}/buy user: " + user);
+            System.out.println("UserController: /stock/{id}/buy stock: " + stock);
+
             BufferedReader reader = request.getReader();
             while ((line = reader.readLine()) != null)
                 jb.append(line);
 
             String jsonString = jb.toString();
 
-            BuyStockRequest buyRequest = gson.fromJson(jsonString, BuyStockRequest.class);
-            int price = buyRequest.getQuantity() * buyRequest.getBuyPrice();
+            BuyStockRequest buyStockRequest = gson.fromJson(jsonString, BuyStockRequest.class);
+            int price = buyStockRequest.getQuantity() * buyStockRequest.getBuyPrice();
+
+            System.out.println("UserController: /stock/{id}/sell buyRequest: " + buyStockRequest);
 
             if(cash > price){
                 AssetEntity cashAsset = portfolio.getCash();
@@ -243,15 +269,15 @@ public class UserController {
                 }
 
                 if(isStockPresentAlready){
-                    AssetEntity assetToBuy = assetOperationService.getAssetById(portfolio, buyRequest.getStockId());
-                    assetToBuy.setQuantity(assetToBuy.getQuantity() + buyRequest.getQuantity());
+                    AssetEntity assetToBuy = assetOperationService.getAssetById(portfolio, buyStockRequest.getStockId());
+                    assetToBuy.setQuantity(assetToBuy.getQuantity() + buyStockRequest.getQuantity());
                 }
                 else{
                     //TODO: A lot of potential problems
 
-                    StockEntity boughtStock =  stockService.getStockById(buyRequest.getStockId());
+                    StockEntity boughtStock =  stockService.getStockById(buyStockRequest.getStockId());
                     AssetEntity boughtAsset = new AssetEntity();
-                    boughtAsset.setQuantity(buyRequest.getQuantity());
+                    boughtAsset.setQuantity(buyStockRequest.getQuantity());
                     boughtAsset.setStock(boughtStock);
                     boughtAsset.setBuyPrice(boughtStock.getCurrentPrice());
 
@@ -287,7 +313,9 @@ public class UserController {
 
         Gson gson = new Gson();
         StringBuffer jb = new StringBuffer();
-        String line = null;
+        String line;
+
+        System.out.println("UserController: /createUser");
 
         try{
             session.getTransaction().begin();
@@ -299,6 +327,7 @@ public class UserController {
             String jsonString = jb.toString();
 
             SignupRequest signupRequest = gson.fromJson(jsonString, SignupRequest.class);
+            System.out.println("UserController: /createUser signupRequest: " + signupRequest);
 
             UserEntity user = new UserEntity();
             user.setUsername(signupRequest.getUsername());
@@ -308,6 +337,8 @@ public class UserController {
                 user.setRole("ADMIN");
             else
                 user.setRole("USER");
+
+            System.out.println("UserController: /createUser user: " + user);
 
 
             PortfolioEntity portfolio = new PortfolioEntity();
