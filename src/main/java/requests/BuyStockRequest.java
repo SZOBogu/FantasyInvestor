@@ -28,4 +28,13 @@ public class BuyStockRequest {
     public void setBuyPrice(int buyPrice) {
         this.buyPrice = buyPrice;
     }
+
+    @Override
+    public String toString() {
+        return "BuyStockRequest{" +
+                "stockId=" + stockId +
+                ", quantity=" + quantity +
+                ", buyPrice=" + buyPrice +
+                '}';
+    }
 }

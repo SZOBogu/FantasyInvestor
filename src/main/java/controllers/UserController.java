@@ -51,11 +51,12 @@ public class UserController {
 
     @GetMapping(value = "/portfolio", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> getPortfolioResponse(Authentication authentication){
+
         Gson gson = new Gson();
         Session session = factory.getCurrentSession();
 
         UserEntity loggedUser = (UserEntity) authentication.getPrincipal();
-
+        System.out.println("UserController: getPortfolioResponse user id: " + loggedUser.getId());
         try {
             session.getTransaction().begin();
             UserEntity user = session.get(UserEntity.class, loggedUser.getId());
@@ -67,6 +68,10 @@ public class UserController {
             PortfolioResponse response = new PortfolioResponse(userId, username, portfolioEntity);
 
             String json = gson.toJson(response);
+
+            System.out.println("UserController: getPortfolioResponse portfolio response: " + loggedUser.getId());
+
+
 			session.close();
 
             return ResponseEntity.status(HttpStatus.OK)

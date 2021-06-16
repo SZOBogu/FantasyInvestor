@@ -11,4 +11,11 @@ public class StockListResponse {
     public void add(StockDataDigest stockDataDigest){
         this.stockData.add(stockDataDigest);
     }
+
+    @Override
+    public String toString() {
+        return "StockListResponse{" +
+                "stockData=" + stockData +
+                '}';
+    }
 }

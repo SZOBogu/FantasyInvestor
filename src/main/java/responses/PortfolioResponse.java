@@ -45,4 +45,13 @@ public class PortfolioResponse {
     public void setAssetData(List<AssetDataDigest> assetData) {
         this.assetData = assetData;
     }
+
+    @Override
+    public String toString() {
+        return "PortfolioResponse{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", assetData=" + assetData +
+                '}';
+    }
 }

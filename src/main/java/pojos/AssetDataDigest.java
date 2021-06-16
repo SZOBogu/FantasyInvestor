@@ -31,4 +31,14 @@ public class AssetDataDigest {
     public double getCurrentPrice() {
         return currentPrice;
     }
+
+    @Override
+    public String toString() {
+        return "AssetDataDigest{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", buyingPrice=" + buyingPrice +
+                ", currentPrice=" + currentPrice +
+                '}';
+    }
 }

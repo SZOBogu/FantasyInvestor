@@ -14,4 +14,12 @@ public class StockDataDigest {
         this.price = stock.getCurrentPrice();
     }
 
+    @Override
+    public String toString() {
+        return "StockDataDigest{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                '}';
+    }
 }

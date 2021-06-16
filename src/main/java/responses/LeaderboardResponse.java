@@ -11,4 +11,11 @@ public class LeaderboardResponse {
     public void add(LeaderboardDigest digest){
         this.leaderboardData.add(digest);
     }
+
+    @Override
+    public String toString() {
+        return "LeaderboardResponse{" +
+                "leaderboardData=" + leaderboardData +
+                '}';
+    }
 }

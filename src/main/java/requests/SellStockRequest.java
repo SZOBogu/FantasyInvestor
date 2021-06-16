@@ -34,4 +34,13 @@ public class SellStockRequest {
     public void setSellingPrice(int sellingPrice) {
         this.sellingPrice = sellingPrice;
     }
+
+    @Override
+    public String toString() {
+        return "SellStockRequest{" +
+                "stockId=" + stockId +
+                ", quantity=" + quantity +
+                ", sellingPrice=" + sellingPrice +
+                '}';
+    }
 }

@@ -13,4 +13,13 @@ public class LeaderboardDigest {
         this.username = user.getUsername();
         this.portfolioValue = PortfolioValueCalculator.getPortfolioValue(user.getPortfolio());
     }
+
+    @Override
+    public String toString() {
+        return "LeaderboardDigest{" +
+                "userId=" + userId +
+                ", username='" + username + '\'' +
+                ", portfolioValue=" + portfolioValue +
+                '}';
+    }
 }
