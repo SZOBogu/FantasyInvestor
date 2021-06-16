@@ -17,10 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 import pojos.StockDataDigest;
 import requests.BuyStockRequest;
 import requests.SellStockRequest;
@@ -279,8 +276,8 @@ public class UserController {
                 .body("Stock buying failed");
     }
 
-    @PostMapping(value = "/signup", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> signup(HttpServletRequest request){
+    @PostMapping(value = "/createUser", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> createUser(HttpServletRequest request){
         Session session = factory.getCurrentSession();
 
         Gson gson = new Gson();
@@ -331,5 +328,10 @@ public class UserController {
             factory.close();
         }
 
+    }
+
+    @RequestMapping(value = "/signup")
+    public String getSignupForm(){
+        return "signup";
     }
 }
