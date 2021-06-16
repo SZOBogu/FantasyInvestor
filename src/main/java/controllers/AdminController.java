@@ -5,6 +5,7 @@ import entities.AssetEntity;
 import entities.PortfolioEntity;
 import entities.StockEntity;
 import entities.UserEntity;
+import helpers.StockNameGenerator;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -55,20 +56,19 @@ public class AdminController {
                 .addAnnotatedClass(UserEntity.class)
                 .buildSessionFactory();
 
-        Session session = factory.getCurrentSession();
-        try{
+        try (factory) {
+            Session session = factory.getCurrentSession();
             session.getTransaction().begin();
             StockEntity stock = session.get(StockEntity.class, id);
             session.delete(stock);
             System.out.println("AdminController Stock: " + stock.toString() + " deleted.");
+            session.getTransaction().commit();
             session.close();
 
             return ResponseEntity.status(HttpStatus.OK)
                     .body("");
         }
-        finally {
-            factory.close(); //potential errors
-        }
+        //potential errors
     }
 
     @PostMapping(value = "/createStock", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -80,13 +80,11 @@ public class AdminController {
                 .addAnnotatedClass(UserEntity.class)
                 .buildSessionFactory();
 
-        Session session = factory.getCurrentSession();
-
-        Gson gson = new Gson();
-        StringBuffer jb = new StringBuffer();
-        String line = null;
-
-        try{
+        try (factory) {
+            Session session = factory.getCurrentSession();
+            Gson gson = new Gson();
+            StringBuffer jb = new StringBuffer();
+            String line = null;
 
             BufferedReader reader = request.getReader();
             while ((line = reader.readLine()) != null)
@@ -105,15 +103,12 @@ public class AdminController {
 
             return ResponseEntity.status(HttpStatus.OK)
                     .body("");
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             System.out.println("Dashboard servlet received POST, exception: " + ex.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("");
         }
-        finally {
-            factory.close(); //potential errors
-        }
+        //potential errors
     }
 
     @RequestMapping(value = "/forcePriceChanges")
@@ -125,21 +120,20 @@ public class AdminController {
                 .addAnnotatedClass(StockEntity.class)
                 .addAnnotatedClass(UserEntity.class)
                 .buildSessionFactory();
-        Session session = factory.getCurrentSession();
-        List<StockEntity> stocks;
 
-        System.out.println("AdminController /forcePriceChanges stock: ");
-
-        try{
+        try (factory) {
+            Session session = factory.getCurrentSession();
+            List<StockEntity> stocks;
+            System.out.println("AdminController /forcePriceChanges stock: ");
             session.getTransaction().begin();
             stocks = session.createQuery(" from StockEntity").getResultList();
 
             Random r = new Random();
 
             //exclude cash
-            for(StockEntity stock : stocks){
-                if(!stock.getName().equals("Cash")) {
-                    double percentChange = r.nextDouble()/10;
+            for (StockEntity stock : stocks) {
+                if (!stock.getName().equals("Cash")) {
+                    double percentChange = r.nextDouble() / 10;
                     boolean isRaising = r.nextBoolean();
 
                     if (isRaising) {
@@ -155,13 +149,41 @@ public class AdminController {
 
             return ResponseEntity.status(HttpStatus.OK)
                     .body("Price update successful");
-        }
-        catch(Exception ex){
+        } catch (Exception ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Price update failed");
         }
-        finally {
-            factory.close(); //potential errors
+        //potential errors
+    }
+
+    @RequestMapping(value = "/generateFakeStocks")
+    public ResponseEntity<String> generateStocks(){
+        SessionFactory factory = new Configuration()
+                .addAnnotatedClass(AssetEntity.class)
+                .addAnnotatedClass(PortfolioEntity.class)
+                .addAnnotatedClass(StockEntity.class)
+                .addAnnotatedClass(UserEntity.class)
+                .buildSessionFactory();
+
+        try (factory) {
+            Session session = factory.getCurrentSession();
+            Random random = new Random();
+            session.getTransaction().begin();
+            for (int i = 0; i < 30; i++) {
+                StockEntity stock = new StockEntity();
+                stock.setName(StockNameGenerator.generateName());
+                stock.setCurrentPrice(random.nextInt(2500));
+                session.save(stock);
+            }
+            session.getTransaction().commit();
+            session.close();
+
+            return ResponseEntity.status(HttpStatus.OK)
+                    .body("Stock generation OK");
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Stock generation failed");
         }
     }
 }

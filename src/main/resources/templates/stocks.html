@@ -13,7 +13,7 @@
         <a href="/leaderboard">Leaderboard</a>
         <a href="/logout">Logout</a>
     </div>
-
+    <h1>List of available stocks</h1>
     <div id="stockListDiv"></div>
     <div id="buyFormDiv">
         <form onsubmit="buy()">
@@ -111,6 +111,25 @@
 
         var json = JSON.parse(xhr.responseText);
         var stockData = json["stockData"];
+
+        row0 = document.createElement("tr");
+        headerId = document.createElement("th");
+        headerName = document.createElement("th");
+        headerPrice = document.createElement("th");
+
+        headerIdtext = document.createTextNode("Stock ID");
+        headerNametext = document.createTextNode("Name");
+        headerPricetext = document.createTextNode("Current Price");
+
+        headerId.appendChild(headerIdtext);
+        headerName.appendChild(headerNametext);
+        headerPrice.appendChild(headerPricetext);
+
+        row0.appendChild(headerId);
+        row0.appendChild(headerName);
+        row0.appendChild(headerPrice);
+
+        table.appendChild(row0);
 
         for (let i = 0; i < json["stockData"].length; i++) {
             row = document.createElement("tr");

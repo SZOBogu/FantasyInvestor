@@ -13,6 +13,7 @@
         <a href="/leaderboard">Leaderboard</a>
         <a href="/logout">Logout</a>
     </div>
+    <h1>Admin panel</h1>
     <div id="deleteUserFormDiv">
         <h2>Delete user</h2>
         <form onsubmit="deleteUser()">
@@ -43,7 +44,8 @@
     </div>
     <h2>Change stock prices</h2>
     <button onclick="forceChanges()">Simulate stock changes</button>
-
+    <h2>Generate fake stocks</h2>
+    <button onclick="generateStocks()">Generate</button>
 </body>
 
 <script>
@@ -86,6 +88,13 @@
     function forceChanges(){
         var xhr = new XMLHttpRequest();
         var url = "http://localhost:8080/admin/forcePriceChanges";
+        xhr.open("POST", url, true);
+        xhr.send(null);
+    }
+
+    function generateStocks(){
+        var xhr = new XMLHttpRequest();
+        var url = "http://localhost:8080/admin/generateFakeStocks";
         xhr.open("POST", url, true);
         xhr.send(null);
     }

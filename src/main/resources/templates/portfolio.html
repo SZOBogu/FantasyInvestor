@@ -13,7 +13,7 @@
         <a href="/leaderboard">Leaderboard</a>
         <a href="/logout">Logout</a>
     </div>
-
+    <h1>Portfolio</h1>
 <h2 id="userIdh1"></h2>
 <h2 id="usernameh2"></h2>
 <div id="portfolioTableID">
@@ -45,6 +45,37 @@
         document.getElementById("userIdh1").innerHTML = "User id: " + json["id"];
         document.getElementById("usernameh2").innerHTML = "Username: " + json["username"];
 
+        row0 = document.createElement("tr");
+        headerId = document.createElement("th");
+        headerName = document.createElement("th");
+        headerCurrentPrice = document.createElement("th");
+        headerBuyingPrice = document.createElement("th");
+        headerQuantity = document.createElement("th");
+        headerTotalValue = document.createElement("th");
+
+        headerIdtext = document.createTextNode("Stock ID");
+        headerNametext = document.createTextNode("Name");
+        headerCurrentPricetext = document.createTextNode("Current Price");
+        headerBuyingPricetext = document.createTextNode("Buying Price");
+        headerQuantitytext = document.createTextNode("Quantity");
+        headerTotalValuetext = document.createTextNode("Total value");
+
+        headerId.appendChild(headerIdtext);
+        headerName.appendChild(headerNametext);
+        headerCurrentPrice.appendChild(headerCurrentPricetext);
+        headerBuyingPrice.appendChild(headerBuyingPricetext);
+        headerQuantity.appendChild(headerQuantitytext);
+        headerTotalValue.appendChild(headerTotalValuetext);
+
+        row0.appendChild(headerId);
+        row0.appendChild(headerName);
+        row0.appendChild(headerCurrentPrice);
+        row0.appendChild(headerBuyingPrice);
+        row0.appendChild(headerQuantitytext);
+        row0.appendChild(headerTotalValue);
+
+        table.appendChild(row0);
+
         for (let i = 0; i < json["assetData"].length; i++) {
             row = document.createElement("tr");
             cellId = document.createElement("td");
@@ -59,17 +90,20 @@
             textBuyingPrice = document.createTextNode(assetData[i].buyingPrice);
             textCurrentPrice = document.createTextNode(assetData[i].currentPrice);
             textQuantity = document.createTextNode(assetData[i].quantity);
-            textTotal = document.createTextNode((assetData[i].currentPrice * json["assetData"][i].quantity).toString());
+            //TODO: fix calculation
+            textTotal = document.createTextNode((parseFloat(assetData[i].currentPrice) * parseInt(json["assetData"][i].quantity)).toString());
 
             cellId.appendChild(textId);
             cellName.appendChild(textName);
             cellCurrentPrice.appendChild(textBuyingPrice);
             cellBuyingPrice.appendChild(textCurrentPrice);
+            cellTotal.appendChild(textTotal);
 
             row.appendChild(cellId);
             row.appendChild(cellName);
             row.appendChild(cellCurrentPrice);
             row.appendChild(cellBuyingPrice);
+            row.appendChild(cellTotal);
 
             table.appendChild(row);
         }

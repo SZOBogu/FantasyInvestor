@@ -13,7 +13,7 @@
         <a href="/leaderboard">Leaderboard</a>
         <a href="/logout">Logout</a>
     </div>
-
+    <h1>Leaderboard</h1>
     <div id="leaderboardTable">
 
     </div>
@@ -39,6 +39,25 @@
 
         var json = JSON.parse(xhr.responseText);
         var leaderboardData = json["leaderboardData"];
+
+        row0 = document.createElement("tr");
+        headerId = document.createElement("th");
+        headerName = document.createElement("th");
+        headerPortfolioValue = document.createElement("th");
+
+        headerIdtext = document.createTextNode("User ID");
+        headerNametext = document.createTextNode("Username");
+        headerPortfolioValuetext = document.createTextNode("Portfolio value");
+
+        headerId.appendChild(headerIdtext);
+        headerName.appendChild(headerNametext);
+        headerPortfolioValue.appendChild(headerPortfolioValuetext);
+
+        row0.appendChild(headerId);
+        row0.appendChild(headerName);
+        row0.appendChild(headerPortfolioValue);
+
+        table.appendChild(row0);
 
         for (let i = 0; i < json["leaderboardData"].length; i++) {
             row = document.createElement("tr");
