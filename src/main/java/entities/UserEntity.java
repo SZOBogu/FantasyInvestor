@@ -1,8 +1,9 @@
 package entities;
 
 
+import com.sun.istack.NotNull;
 import helpers.PortfolioValueCalculator;
-import org.jetbrains.annotations.NotNull;
+
 import org.springframework.scheduling.support.SimpleTriggerContext;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -29,8 +30,9 @@ public class UserEntity implements UserDetails, Comparable {
     @Column(name = "password")
     private String password;
 
-    @OneToOne(targetEntity = PortfolioEntity.class, mappedBy = "portfolioEntity", cascade = {CascadeType.DETACH, CascadeType.MERGE,
+    @OneToOne(targetEntity = PortfolioEntity.class, cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.REFRESH}, fetch = FetchType.EAGER)
+    @JoinColumn(name = "portfolio_id")
     private PortfolioEntity portfolio;
 
     @Basic
