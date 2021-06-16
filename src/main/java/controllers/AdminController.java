@@ -39,6 +39,11 @@ public class AdminController {
             .buildSessionFactory();
 
 
+    @RequestMapping
+    private String getPage(){
+        return "admin";
+    }
+
     @DeleteMapping(value = "/deleteUser/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable int id){
         System.out.println("AdminController /deleteUser");

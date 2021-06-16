@@ -70,6 +70,7 @@ public class UserController {
 
             System.out.println("UserController: getPortfolioResponse portfolio response: " + response);
 
+            session.getTransaction().commit();
 			session.close();
 
             return ResponseEntity.status(HttpStatus.OK)
@@ -106,6 +107,7 @@ public class UserController {
             System.out.println("UserController: getPortfolio/{id} response: " + response);
 
             String json = gson.toJson(response);
+            session.getTransaction().commit();
             session.close();
 
             return ResponseEntity.status(HttpStatus.OK)
@@ -376,10 +378,19 @@ public class UserController {
 
 
             PortfolioEntity portfolio = new PortfolioEntity();
+            //TODO: clean up
+            //portfolio.setAssets(new ArrayList<>());
             AssetEntity cashAsset = new AssetEntity();
             cashAsset.setQuantity(1000000);
             cashAsset.setStock(stockService.getStockByName("Cash"));
-            portfolio.getAssets().add(cashAsset);
+            cashAsset.setBuyPrice(1);
+            user.setPortfolio(portfolio);
+
+            //TODO: assets don't get binded
+            List<AssetEntity> assets = new ArrayList<>();
+            assets.add(cashAsset);
+            portfolio.setAssets(assets);
+
             session.save(cashAsset);
             session.save(portfolio);
             session.save(user);

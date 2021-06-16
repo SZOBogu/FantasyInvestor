@@ -42,6 +42,7 @@ public class UserService implements UserDetailsService {
                     return user;
                 }
             }
+            session.getTransaction().commit();
             session.close();
             throw new UsernameNotFoundException("loadUserByUsername exception: username not found\n");
         }
@@ -60,6 +61,8 @@ public class UserService implements UserDetailsService {
         Session session = factory.getCurrentSession();
 
         try{
+            session.getTransaction().begin();
+
             UserEntity user = session.get(UserEntity.class, id);
             PortfolioEntity portfolio = user.getPortfolio();
             List<AssetEntity> assets = portfolio.getAssets();
@@ -72,7 +75,11 @@ public class UserService implements UserDetailsService {
 
             session.delete(portfolio);
             session.delete(user);
+            session.getTransaction().commit();
             session.close();
+        }
+        catch(NullPointerException npe){
+            System.out.println("No such index of user");
         }
         finally {
             factory.close();
