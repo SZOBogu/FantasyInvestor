@@ -310,6 +310,8 @@ public class UserController {
             if(cash > price){
                 AssetEntity cashAsset = portfolio.getCash();
                 cashAsset.setQuantity(cashAsset.getQuantity() - price);
+                session.save(cashAsset);
+
                 boolean isStockPresentAlready = false;
                 for(AssetEntity asset : portfolio.getAssets()){
                     if(asset.getStock().equals(stock)){
@@ -321,6 +323,15 @@ public class UserController {
                 if(isStockPresentAlready){
                     AssetEntity assetToBuy = assetOperationService.getAssetById(portfolio, buyStockRequest.getStockId());
                     assetToBuy.setQuantity(assetToBuy.getQuantity() + buyStockRequest.getQuantity());
+                    assetToBuy.setBuyPrice(assetToBuy.getStock().getCurrentPrice());
+
+                    session.save(assetToBuy);
+
+                    session.getTransaction().commit();
+                    session.close();
+
+                    return ResponseEntity.status(HttpStatus.OK)
+                            .body("Stock bought");
                 }
                 else{
                     //TODO: A lot of potential problems
@@ -333,6 +344,7 @@ public class UserController {
                     boughtAsset.setQuantity(buyStockRequest.getQuantity());
                     boughtAsset.setStock(boughtStock);
                     boughtAsset.setBuyPrice(boughtStock.getCurrentPrice());
+                    boughtAsset.setPortfolioEntity(portfolio);
 
                     portfolio.getAssets().add(boughtAsset);
                     session.save(boughtAsset);
@@ -359,8 +371,6 @@ public class UserController {
         finally {
             factory.close();
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body("Stock buying failed");
     }
 
     @PostMapping(value = "/createUser", produces = MediaType.APPLICATION_JSON_VALUE)
