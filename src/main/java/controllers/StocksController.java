@@ -192,7 +192,6 @@ public class StocksController {
         }
     }
 
-    //TODO: money isn't subtracted
     @PostMapping(value = "/stock/{id}/buy", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> buyStock(@PathVariable int id, HttpServletRequest request, Authentication authentication){
         SessionFactory factory = new Configuration()
@@ -228,7 +227,7 @@ public class StocksController {
             String jsonString = jb.toString();
 
             BuyStockRequest buyStockRequest = gson.fromJson(jsonString, BuyStockRequest.class);
-            int price = buyStockRequest.getQuantity() * buyStockRequest.getBuyPrice();
+            int price = (int)(buyStockRequest.getQuantity() * stock.getCurrentPrice());
 
             System.out.println("StocksController: /stock/{id}/buy buyRequest: " + buyStockRequest);
 
@@ -278,7 +277,6 @@ public class StocksController {
                     return ResponseEntity.status(HttpStatus.OK)
                             .body("Stock bought");
                 }
-//                portfolio.getAssets().add
             }
 
             else{
