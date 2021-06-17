@@ -22,4 +22,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         ExceptionDetails exceptionDetails = new ExceptionDetails(e.getMessage(), HttpStatus.NOT_FOUND.name());
         return new ResponseEntity<>(exceptionDetails, HttpStatus.NOT_FOUND);
     }
+
+    //TODO: more exceptions
 }
