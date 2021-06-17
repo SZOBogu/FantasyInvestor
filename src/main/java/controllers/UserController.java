@@ -6,6 +6,7 @@ import entities.PortfolioEntity;
 import entities.StockEntity;
 import entities.UserEntity;
 import exceptions.InsufficientFundsException;
+import exceptions.NotEnoughStocksToSellException;
 import helpers.AvailableCreditGetter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -198,6 +199,7 @@ public class UserController {
         return "stock";
     }
 
+    //TODO: money isn't added, check if asset already exists if it does: delete it
     @PostMapping(value = "/stock/{id}/sell", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> sellStock(@PathVariable int id, HttpServletRequest request, Authentication authentication){
         SessionFactory factory = new Configuration()
@@ -221,6 +223,7 @@ public class UserController {
             PortfolioEntity portfolio = user.getPortfolio();
             List<AssetEntity> assets = portfolio.getAssets();
             StockEntity stock = session.get(StockEntity.class, id);
+            //StockEntity cashStock = session.get(StockEntity.class, 1);
 
             System.out.println("UserController: /stock/{id}/sell user: " + user);
             System.out.println("UserController: /stock/{id}/sell stock: " + stock);
@@ -237,20 +240,26 @@ public class UserController {
             System.out.println("UserController: /stock/{id}/sell sellStockRequest: " + sellStockRequest);
 
             for(AssetEntity asset : assets){
-                if(asset.getStock().getName().equals(stock.getName())){
-                    if(asset.getQuantity() > sellStockRequest.getQuantity()){
+                if(asset.getStock().getName().equals(stock.getName())) {
+                    if (asset.getQuantity() > sellStockRequest.getQuantity()) {
                         asset.setQuantity(asset.getQuantity() - sellStockRequest.getQuantity());
                         session.update(asset);
-                    }
-                    //TODO: fix, subtracting cash only after deleting stock, handle too much stocks to sell
-                    else if(asset.getStock().getName().equals("Cash")){
-                        asset.setQuantity(asset.getQuantity() + price);
-                        session.update(asset);
-                    }
+
+                    } else
+                        throw new NotEnoughStocksToSellException();
+                }
+                if(asset.getStock().getName().equals("Cash")) {
+                    //portfolio.getAssets().remove(asset);
+                    asset.setQuantity(asset.getQuantity() + price);
+//                        AssetEntity newCash = new AssetEntity();
+//                        newCash.setStock(stockService.getStockByName("Cash"));
+//                        newCash.setPortfolioEntity(portfolio);
+//                        newCash.setQuantity(asset.getQuantity() + price);
+//                        portfolio.getAssets().remove(asset);
+//                        portfolio.getAssets().add(newCash);
+                    session.update(asset);
                 }
             }
-
-
 
             session.getTransaction().commit();
             session.close();
@@ -268,6 +277,7 @@ public class UserController {
         }
     }
 
+    //TODO: money isn't subtracted
     @PostMapping(value = "/stock/{id}/buy", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> buyStock(@PathVariable int id, HttpServletRequest request, Authentication authentication){
         SessionFactory factory = new Configuration()
@@ -334,10 +344,7 @@ public class UserController {
                             .body("Stock bought");
                 }
                 else{
-                    //TODO: A lot of potential problems
-
                     StockEntity boughtStock =  stockService.getStockById(buyStockRequest.getStockId());
-
 
                     AssetEntity boughtAsset = new AssetEntity();
 
@@ -348,7 +355,7 @@ public class UserController {
 
                     portfolio.getAssets().add(boughtAsset);
                     session.save(boughtAsset);
-                    session.update(portfolio);          //TODO: test
+                    session.update(portfolio);
 
                     session.getTransaction().commit();
                     session.close();
@@ -414,14 +421,13 @@ public class UserController {
 
 
             PortfolioEntity portfolio = new PortfolioEntity();
-            //TODO: clean up
+
             AssetEntity cashAsset = new AssetEntity();
             cashAsset.setQuantity(1000000);
             cashAsset.setStock(stockService.getStockByName("Cash"));
             cashAsset.setBuyPrice(1);
             user.setPortfolio(portfolio);
 
-            //TODO: assets don't get binded
             List<AssetEntity> assets = new ArrayList<>();
             assets.add(cashAsset);
             portfolio.setAssets(assets);

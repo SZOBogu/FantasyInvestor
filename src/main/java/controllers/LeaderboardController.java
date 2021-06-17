@@ -48,7 +48,7 @@ public class LeaderboardController {
             session.getTransaction().begin();
 
             List<UserEntity> users = session.createQuery(" from UserEntity").getResultList();
-            Collections.sort(users);
+            Collections.sort(users, Collections.reverseOrder());
             LeaderboardResponse response = new LeaderboardResponse();
 
             for(int i = 0; i < users.size(); i++){
