@@ -72,6 +72,7 @@ SELECT * FROM portfolio;
 SELECT * FROM asset;
 SELECT * FROM stock;
 
-INSERT INTO stock (name, currentPrice, priceAtTheStartOfTheDay, priceAtTheStartOfTheWeek, priceAtTheStartOfTheMonth, priceAtTheStartOfTheYear) VALUES ("Cash", 1, 1, 1, 1, 1);
+INSERT INTO stock (name, currentPrice, priceAtTheStartOfTheDay, priceAtTheStartOfTheWeek, priceAtTheStartOfTheMonth, priceAtTheStartOfTheYear)
+VALUES ("Cash", 1, 1, 1, 1, 1);
 
 SHOW INDEXES FROM asset;
