@@ -12,11 +12,10 @@ public class PortfolioEntity {
     private int id;
 
 
-    @OneToMany(targetEntity = AssetEntity.class,
-            cascade = {CascadeType.DETACH, CascadeType.MERGE,
+    @OneToMany(mappedBy = "portfolioEntity", cascade = {CascadeType.DETACH, CascadeType.MERGE,
                     CascadeType.PERSIST, CascadeType.REFRESH},
             fetch = FetchType.EAGER)
-    @JoinColumn(name="asset_id")
+    //@JoinColumn(name="asset_id")
     private List<AssetEntity> assets;
 
     public int getId() {

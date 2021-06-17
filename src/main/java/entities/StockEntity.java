@@ -36,9 +36,9 @@ public class StockEntity {
     @Column(name = "priceAtTheStartOfTheYear")
     private double priceAtTheStartOfTheYear;
 
-    @OneToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE,
+    @OneToMany(mappedBy = "stock", cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name="asset_id")
+    //@JoinColumn(name="asset_id")
     private List<AssetEntity> assets;
 
     public int getId() {

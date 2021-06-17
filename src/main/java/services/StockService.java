@@ -32,6 +32,7 @@ public class StockService {
             session.getTransaction().begin();
             StockEntity stockEntity = session.get(StockEntity.class, id);
             session.getTransaction().commit();
+            System.out.println("Stock service, getStockById stock: " + stockEntity);
             return stockEntity;
         }
         finally {
@@ -57,6 +58,7 @@ public class StockService {
             query.setParameter("name", name);
 
             StockEntity stock =  (StockEntity) query.uniqueResult();
+            System.out.println("Stock service, getStockByName stock: " + stock);
             session.getTransaction().commit();
             return stock;
         }

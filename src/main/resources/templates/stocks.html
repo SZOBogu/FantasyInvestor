@@ -15,21 +15,24 @@
     </div>
     <h1>List of available stocks</h1>
     <div id="stockListDiv"></div>
+    <h2>Buy stocks</h2>
     <div id="buyFormDiv">
         <form onsubmit="buy()">
             <label for="buyId">Id of stock you want to buy:</label><br>
             <input type="number" id="buyId" name="buyId"><br>
+
             <label for="buyQuantity">How many would you buy?</label><br>
             <input type="number" id="buyQuantity" name="buyQuantity">
             <input type="submit" value="Submit">
         </form>
     </div>
 
+    <h2>Sell stocks</h2>
     <div id="sellFormDiv">
         <form onsubmit="sell()">
-            <label for="sellId">Id of stock you want to buy:</label><br>
+            <label for="sellId">Id of stock you want to sell:</label><br>
             <input type="number" id="sellId" name="sellId"><br>
-            <label for="sellQuantity">How many would you buy?</label><br>
+            <label for="sellQuantity">How many would you sell?</label><br>
             <input type="number" id="sellQuantity" name="sellQuantity">
             <input type="submit" value="Submit">
         </form>
@@ -56,8 +59,8 @@
     }
 
     class StockOperationRequest{
-        constructor(id, quantity) {
-            this.id = id;
+        constructor(stockId, quantity) {
+            this.stockId = stockId;
             this.quantity = quantity;
         }
     }

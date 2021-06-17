@@ -249,6 +249,9 @@ public class UserController {
                     }
                 }
             }
+
+
+
             session.getTransaction().commit();
             session.close();
 
@@ -302,7 +305,7 @@ public class UserController {
             BuyStockRequest buyStockRequest = gson.fromJson(jsonString, BuyStockRequest.class);
             int price = buyStockRequest.getQuantity() * buyStockRequest.getBuyPrice();
 
-            System.out.println("UserController: /stock/{id}/sell buyRequest: " + buyStockRequest);
+            System.out.println("UserController: /stock/{id}/buy buyRequest: " + buyStockRequest);
 
             if(cash > price){
                 AssetEntity cashAsset = portfolio.getCash();
@@ -323,13 +326,18 @@ public class UserController {
                     //TODO: A lot of potential problems
 
                     StockEntity boughtStock =  stockService.getStockById(buyStockRequest.getStockId());
+
+
                     AssetEntity boughtAsset = new AssetEntity();
+
                     boughtAsset.setQuantity(buyStockRequest.getQuantity());
                     boughtAsset.setStock(boughtStock);
                     boughtAsset.setBuyPrice(boughtStock.getCurrentPrice());
 
                     portfolio.getAssets().add(boughtAsset);
+                    session.save(boughtAsset);
                     session.update(portfolio);          //TODO: test
+
                     session.getTransaction().commit();
                     session.close();
 
@@ -397,7 +405,6 @@ public class UserController {
 
             PortfolioEntity portfolio = new PortfolioEntity();
             //TODO: clean up
-            //portfolio.setAssets(new ArrayList<>());
             AssetEntity cashAsset = new AssetEntity();
             cashAsset.setQuantity(1000000);
             cashAsset.setStock(stockService.getStockByName("Cash"));
@@ -408,7 +415,7 @@ public class UserController {
             List<AssetEntity> assets = new ArrayList<>();
             assets.add(cashAsset);
             portfolio.setAssets(assets);
-
+            cashAsset.setPortfolioEntity(portfolio);
             session.save(cashAsset);
             session.save(portfolio);
             session.save(user);

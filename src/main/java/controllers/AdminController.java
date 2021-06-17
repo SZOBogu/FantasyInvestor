@@ -68,7 +68,6 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.OK)
                     .body("");
         }
-        //potential errors
     }
 
     @PostMapping(value = "/createStock", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -108,11 +107,9 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("");
         }
-        //potential errors
     }
 
     @RequestMapping(value = "/forcePriceChanges")
-    //TODO: zwrot informacji
     public ResponseEntity<String> forceUpdate(){
         SessionFactory factory = new Configuration()
                 .addAnnotatedClass(AssetEntity.class)
@@ -141,7 +138,7 @@ public class AdminController {
                     } else {
                         stock.setCurrentPrice(stock.getCurrentPrice() * (1 - percentChange));
                     }
-                    session.update(stock);      //a lot of potential trouble
+                    session.update(stock);
                 }
             }
             session.getTransaction().commit();
@@ -153,7 +150,6 @@ public class AdminController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Price update failed");
         }
-        //potential errors
     }
 
     @RequestMapping(value = "/generateFakeStocks")

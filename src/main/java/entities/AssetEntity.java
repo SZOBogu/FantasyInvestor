@@ -18,6 +18,10 @@ public class AssetEntity {
     @Column(name = "buyPrice")
     private double buyPrice;
 
+    @ManyToOne
+    @JoinColumn(name = "portfolio_id")
+    private PortfolioEntity portfolioEntity;
+
     @ManyToOne(targetEntity = StockEntity.class,
             cascade = {CascadeType.DETACH, CascadeType.MERGE,
             CascadeType.PERSIST, CascadeType.REFRESH})
@@ -54,6 +58,14 @@ public class AssetEntity {
 
     public void setStock(StockEntity stock) {
         this.stock = stock;
+    }
+
+    public PortfolioEntity getPortfolioEntity() {
+        return portfolioEntity;
+    }
+
+    public void setPortfolioEntity(PortfolioEntity portfolioEntity) {
+        this.portfolioEntity = portfolioEntity;
     }
 
     @Override
