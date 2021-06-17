@@ -65,14 +65,6 @@
         }
     }
 
-    class StockInfoDigest{
-        constructor(id, name, price) {
-            this.id = id;
-            this.name = name;
-            this.price = price;
-        }
-    }
-
     function buy(){
         var xhr = new XMLHttpRequest();
         var url = "http://localhost:8080/stock/" + document.getElementById("buyId").value +"/buy";

@@ -5,7 +5,7 @@ import entities.AssetEntity;
 import entities.PortfolioEntity;
 import entities.StockEntity;
 import entities.UserEntity;
-import exceptions.DeletingNonExistentResource;
+import exceptions.AccessToNonExistentResource;
 import exceptions.InsufficientFundsException;
 import exceptions.NotEnoughStocksToSellException;
 import helpers.AvailableCreditGetter;
@@ -26,8 +26,6 @@ import requests.SellStockRequest;
 import responses.StockListResponse;
 import services.AssetOperationService;
 import services.StockService;
-
-import javax.security.auth.DestroyFailedException;
 import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -145,11 +143,7 @@ public class StocksController {
 
             SellStockRequest sellStockRequest = gson.fromJson(jsonString, SellStockRequest.class);
 
-//            System.out.println("Quantity: " + sellStockRequest.getQuantity());
-//            System.out.println("SellingPrice: " + stock.getCurrentPrice());
             int price = (int)(sellStockRequest.getQuantity() * stock.getCurrentPrice());
-//            System.out.println("Total monies: " + price);
-//            System.out.println("StocksController: /stock/{id}/sell sellStockRequest: " + sellStockRequest);
 
             for(AssetEntity asset : assets) {
                 if (asset.getStock().getName().equals(stock.getName())) {
@@ -185,7 +179,7 @@ public class StocksController {
                     .body("");
         }
         catch(NullPointerException nullPointerException){
-            throw new DeletingNonExistentResource();
+            throw new AccessToNonExistentResource();
         }
         finally {
             factory.close();
@@ -289,7 +283,7 @@ public class StocksController {
                     .body("IOException");
         }
         catch(NullPointerException nullPointerException){
-            throw new DeletingNonExistentResource();
+            throw new AccessToNonExistentResource();
         }
         finally {
             factory.close();
