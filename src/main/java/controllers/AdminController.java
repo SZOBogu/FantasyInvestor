@@ -5,6 +5,7 @@ import entities.AssetEntity;
 import entities.PortfolioEntity;
 import entities.StockEntity;
 import entities.UserEntity;
+import exceptions.AccessToNonExistentResource;
 import helpers.StockNameGenerator;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -44,7 +45,7 @@ public class AdminController {
 
         userService.deleteUser(id);
         return ResponseEntity.status(HttpStatus.OK)
-                    .body("");
+                    .body("User Deleted");
     }
 
     @DeleteMapping(value = "/deleteStock/{id}")
@@ -66,7 +67,10 @@ public class AdminController {
             session.close();
 
             return ResponseEntity.status(HttpStatus.OK)
-                    .body("");
+                    .body("Stock Deleted");
+        }
+        catch(NullPointerException nullPointerException){
+            throw new AccessToNonExistentResource();
         }
     }
 
@@ -101,11 +105,11 @@ public class AdminController {
             session.close();
 
             return ResponseEntity.status(HttpStatus.OK)
-                    .body("");
+                    .body("Stock Created");
         } catch (Exception ex) {
             System.out.println("Dashboard servlet received POST, exception: " + ex.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("");
+                    .body("Stock Creation failed");
         }
     }
 
@@ -168,7 +172,7 @@ public class AdminController {
             for (int i = 0; i < 30; i++) {
                 StockEntity stock = new StockEntity();
                 stock.setName(StockNameGenerator.generateName());
-                stock.setCurrentPrice(random.nextInt(2500));
+                stock.setCurrentPrice(random.nextInt(2500) + 1);
                 session.save(stock);
             }
             session.getTransaction().commit();

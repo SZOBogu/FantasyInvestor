@@ -46,6 +46,8 @@
     <button onclick="forceChanges()">Simulate stock changes</button>
     <h2>Generate fake stocks</h2>
     <button onclick="generateStocks()">Generate</button>
+
+    <p id = "feedback"></p>
 </body>
 
 <script>
@@ -64,6 +66,9 @@
         var xhr = new XMLHttpRequest();
         var url = "http://localhost:8080/admin/deleteUser/" + document.getElementById("deleteUserId").value;
         xhr.open("DELETE", url, true);
+        xhr.onreadystatechange = function () {
+            document.getElementById("feedback").innerHTML = xhr.responseText;
+        }
         xhr.send(null);
     }
 
@@ -74,7 +79,9 @@
         var url = "http://localhost:8080/admin/createStock";
         xhr.open("POST", url, true);
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-
+        xhr.onreadystatechange = function () {
+            document.getElementById("feedback").innerHTML = xhr.responseText;
+        }
         xhr.send(JSON.stringify(stock));
     }
 
@@ -82,6 +89,9 @@
         var xhr = new XMLHttpRequest();
         var url = "http://localhost:8080/admin/deleteStock/" + document.getElementById("deleteStockId").value;
         xhr.open("DELETE", url, true);
+        xhr.onreadystatechange = function () {
+            document.getElementById("feedback").innerHTML = xhr.responseText;
+        }
         xhr.send(null);
     }
 
@@ -89,6 +99,9 @@
         var xhr = new XMLHttpRequest();
         var url = "http://localhost:8080/admin/forcePriceChanges";
         xhr.open("POST", url, true);
+        xhr.onreadystatechange = function () {
+            document.getElementById("feedback").innerHTML = xhr.responseText;
+        }
         xhr.send(null);
     }
 
@@ -96,6 +109,9 @@
         var xhr = new XMLHttpRequest();
         var url = "http://localhost:8080/admin/generateFakeStocks";
         xhr.open("POST", url, true);
+        xhr.onreadystatechange = function () {
+            document.getElementById("feedback").innerHTML = xhr.responseText;
+        }
         xhr.send(null);
     }
 </script>

@@ -90,7 +90,6 @@
             textBuyingPrice = document.createTextNode(assetData[i].buyingPrice);
             textCurrentPrice = document.createTextNode(assetData[i].currentPrice);
             textQuantity = document.createTextNode(assetData[i].quantity);
-            //TODO: fix calculation
             textTotal = document.createTextNode((parseFloat(assetData[i].currentPrice) * parseInt(json["assetData"][i].quantity)).toString());
 
             cellId.appendChild(textId);

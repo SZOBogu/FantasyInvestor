@@ -16,14 +16,6 @@ import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
-
-//    private  SessionFactory factory = new Configuration()
-//            .addAnnotatedClass(AssetEntity.class)
-//            .addAnnotatedClass(PortfolioEntity.class)
-//            .addAnnotatedClass(StockEntity.class)
-//            .addAnnotatedClass(UserEntity.class)
-//            .buildSessionFactory();
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         SessionFactory factory = new Configuration()

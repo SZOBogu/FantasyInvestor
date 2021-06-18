@@ -155,8 +155,11 @@ public class StocksController {
                     else if(asset.getQuantity() == sellStockRequest.getQuantity())
                         session.delete(asset);
 
-                    else
-                        throw new NotEnoughStocksToSellException();
+                    else {
+                        System.out.println("StocksController, /stock/{id}/buy, NotEnoughStocksToSellException thrown");
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body("Not enough stocks to sell");
+                    }
                 }
                 if(asset.getStock().getName().equals("Cash")) {
                     cashAssetEntity = asset;
@@ -176,10 +179,13 @@ public class StocksController {
         catch(IOException e){
             System.out.println("StocksController, sell stock received POST, exception: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("");
+                    .body("Stock selling failed");
         }
         catch(NullPointerException nullPointerException){
-            throw new AccessToNonExistentResource();
+//            System.out.println("StocksController, /stock/{id}/sell, AccessToNonExistentResource thrown");
+//            throw new AccessToNonExistentResource();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("AccessToNonExistentResource");
         }
         finally {
             factory.close();
@@ -274,7 +280,9 @@ public class StocksController {
             }
 
             else{
-                throw new InsufficientFundsException();
+//                System.out.println("StocksController, /stock/{id}/buy, InsufficientFundsException thrown");
+//                throw new InsufficientFundsException();
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("InsufficientFundsException");
             }
         }
         catch(IOException ioException){
@@ -283,7 +291,9 @@ public class StocksController {
                     .body("IOException");
         }
         catch(NullPointerException nullPointerException){
-            throw new AccessToNonExistentResource();
+//            System.out.println("StocksController, /stock/{id}/buy, AccessToNonExistentResource thrown");
+//            throw new AccessToNonExistentResource();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("AccessToNonExistentResource");
         }
         finally {
             factory.close();

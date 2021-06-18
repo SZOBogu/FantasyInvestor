@@ -12,13 +12,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class StockService {
-//    private final SessionFactory factory = new Configuration()
-//            .addAnnotatedClass(AssetEntity.class)
-//            .addAnnotatedClass(PortfolioEntity.class)
-//            .addAnnotatedClass(StockEntity.class)
-//            .addAnnotatedClass(UserEntity.class)
-//            .buildSessionFactory();
-
     public StockEntity getStockById(int id){
         SessionFactory factory = new Configuration()
                 .addAnnotatedClass(AssetEntity.class)

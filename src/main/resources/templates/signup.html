@@ -21,6 +21,7 @@
   <input type="password" id="password" name="password">
   <input type="submit" value="Submit">
 </form>
+<p id = "feedback"></p>
 
 <script>
     class SignupRequest{
@@ -42,7 +43,7 @@
         xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 
         xhr.onreadystatechange = function () {
-            document.querySelector('html').innerHTML = xhr.responseText;
+            document.getElementById("feedback").innerHTML = xhr.responseText;
         }
 
         xhr.send(JSON.stringify(signupRequest));

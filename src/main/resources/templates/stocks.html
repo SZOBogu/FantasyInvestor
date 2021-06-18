@@ -73,7 +73,9 @@
 
         const buyRequest = new StockOperationRequest(document.getElementById("buyId").value, document.getElementById("buyQuantity").value);
         xhr.onreadystatechange = function () {
-            document.querySelector('html').innerHTML = xhr.responseText;
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                document.getElementById("feedback").innerHTML = xhr.responseText;
+            }
         }
         xhr.send(JSON.stringify(buyRequest));
     }
@@ -86,7 +88,9 @@
 
         const sellRequest = new StockOperationRequest(document.getElementById("sellId").value, document.getElementById("sellQuantity").value);
         xhr.onreadystatechange = function () {
-            document.querySelector('html').innerHTML = xhr.responseText;
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                document.getElementById("feedback").innerHTML = xhr.responseText;
+            }
         }
         xhr.send(JSON.stringify(sellRequest));
     }

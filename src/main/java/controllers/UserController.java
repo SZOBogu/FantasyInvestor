@@ -74,7 +74,6 @@ public class UserController {
 
             System.out.println("UserController: /createUser user: " + user);
 
-
             PortfolioEntity portfolio = new PortfolioEntity();
 
             AssetEntity cashAsset = new AssetEntity();
@@ -99,7 +98,7 @@ public class UserController {
         catch (IOException exception){
             System.out.println("User controller, createUser received POST, exception: " + exception.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body("");
+                    .body("User creation error");
         }
         finally {
             factory.close();
