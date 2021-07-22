@@ -58,7 +58,7 @@ public class AdminController {
                 .buildSessionFactory();
 
         try (factory) {
-            Session session = factory.getCurrentSession();
+            Session session = factory.openSession();
             session.getTransaction().begin();
             StockEntity stock = session.get(StockEntity.class, id);
             session.delete(stock);
@@ -84,7 +84,7 @@ public class AdminController {
                 .buildSessionFactory();
 
         try (factory) {
-            Session session = factory.getCurrentSession();
+            Session session = factory.openSession();
             Gson gson = new Gson();
             StringBuffer jb = new StringBuffer();
             String line = null;
@@ -123,7 +123,7 @@ public class AdminController {
                 .buildSessionFactory();
 
         try (factory) {
-            Session session = factory.getCurrentSession();
+            Session session = factory.openSession();
             List<StockEntity> stocks;
             System.out.println("AdminController /forcePriceChanges stock: ");
             session.getTransaction().begin();
@@ -166,7 +166,7 @@ public class AdminController {
                 .buildSessionFactory();
 
         try (factory) {
-            Session session = factory.getCurrentSession();
+            Session session = factory.openSession();
             Random random = new Random();
             session.getTransaction().begin();
             for (int i = 0; i < 30; i++) {

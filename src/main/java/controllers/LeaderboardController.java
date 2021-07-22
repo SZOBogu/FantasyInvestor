@@ -41,7 +41,7 @@ public class LeaderboardController {
 
         System.out.println("LeaderboardController got request");
 
-        Session session = factory.getCurrentSession();
+        Session session = factory.openSession();
         Gson gson = new Gson();
 
         try{

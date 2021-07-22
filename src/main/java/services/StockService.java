@@ -19,7 +19,7 @@ public class StockService {
                 .addAnnotatedClass(StockEntity.class)
                 .addAnnotatedClass(UserEntity.class)
                 .buildSessionFactory();
-        Session session = factory.getCurrentSession();
+        Session session = factory.openSession();
 
         try {
             session.getTransaction().begin();
@@ -41,7 +41,7 @@ public class StockService {
                 .addAnnotatedClass(StockEntity.class)
                 .addAnnotatedClass(UserEntity.class)
                 .buildSessionFactory();
-        Session session = factory.getCurrentSession();
+        Session session = factory.openSession();
 
         try {
             session.getTransaction().begin();

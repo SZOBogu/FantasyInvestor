@@ -24,7 +24,7 @@ public class UserService implements UserDetailsService {
                 .addAnnotatedClass(StockEntity.class)
                 .addAnnotatedClass(UserEntity.class)
                 .buildSessionFactory();
-        Session session = factory.getCurrentSession();
+        Session session = factory.openSession();
 
         try{
             session.getTransaction().begin();
@@ -50,7 +50,7 @@ public class UserService implements UserDetailsService {
                 .addAnnotatedClass(StockEntity.class)
                 .addAnnotatedClass(UserEntity.class)
                 .buildSessionFactory();
-        Session session = factory.getCurrentSession();
+        Session session = factory.openSession();
 
         try{
             session.getTransaction().begin();

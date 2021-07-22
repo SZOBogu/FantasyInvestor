@@ -36,7 +36,7 @@ public class PortfolioController {
                 .addAnnotatedClass(UserEntity.class)
                 .buildSessionFactory();
         Gson gson = new Gson();
-        Session session = factory.getCurrentSession();
+        Session session = factory.openSession();
 
         UserEntity loggedUser = (UserEntity) authentication.getPrincipal();
         System.out.println("PortfolioController: getPortfolioResponse user id: " + loggedUser.getId());
@@ -77,7 +77,7 @@ public class PortfolioController {
 
         try (factory) {
             Gson gson = new Gson();
-            Session session = factory.getCurrentSession();
+            Session session = factory.openSession();
             System.out.println("PortfolioController: getPortfolio/{id}");
             session.getTransaction().begin();
             UserEntity user = session.get(UserEntity.class, id);

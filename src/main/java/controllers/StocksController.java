@@ -5,9 +5,6 @@ import entities.AssetEntity;
 import entities.PortfolioEntity;
 import entities.StockEntity;
 import entities.UserEntity;
-import exceptions.AccessToNonExistentResource;
-import exceptions.InsufficientFundsException;
-import exceptions.NotEnoughStocksToSellException;
 import helpers.AvailableCreditGetter;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -21,8 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import pojos.StockDataDigest;
-import requests.BuyStockRequest;
-import requests.SellStockRequest;
+import requests.StockOperationRequest;
 import responses.StockListResponse;
 import services.AssetOperationService;
 import services.StockService;
@@ -52,7 +48,7 @@ public class StocksController {
                 .addAnnotatedClass(StockEntity.class)
                 .addAnnotatedClass(UserEntity.class)
                 .buildSessionFactory();
-        Session session = factory.getCurrentSession();
+        Session session = factory.openSession();
         Gson gson = new Gson();
         StockListResponse response = new StockListResponse();
         List<StockEntity> stocks;
@@ -89,7 +85,7 @@ public class StocksController {
                 .addAnnotatedClass(StockEntity.class)
                 .addAnnotatedClass(UserEntity.class)
                 .buildSessionFactory();
-        Session session = factory.getCurrentSession();
+        Session session = factory.openSession();
         System.out.println("StocksController: /stock/{id} ");
         try{
             session.getTransaction().begin();
@@ -115,7 +111,7 @@ public class StocksController {
                 .addAnnotatedClass(StockEntity.class)
                 .addAnnotatedClass(UserEntity.class)
                 .buildSessionFactory();
-        Session session = factory.getCurrentSession();
+        Session session = factory.openSession();
         UserEntity loggedUser = (UserEntity) authentication.getPrincipal();
 
         System.out.println("StocksController: /stock/{id}/sell loggedUser: " + loggedUser);
@@ -141,7 +137,7 @@ public class StocksController {
 
             String jsonString = jb.toString();
 
-            SellStockRequest sellStockRequest = gson.fromJson(jsonString, SellStockRequest.class);
+            StockOperationRequest sellStockRequest = gson.fromJson(jsonString, StockOperationRequest.class);
 
             int price = (int)(sellStockRequest.getQuantity() * stock.getCurrentPrice());
 
@@ -200,7 +196,7 @@ public class StocksController {
                 .addAnnotatedClass(StockEntity.class)
                 .addAnnotatedClass(UserEntity.class)
                 .buildSessionFactory();
-        Session session = factory.getCurrentSession();
+        Session session = factory.openSession();
         UserEntity loggedUser = (UserEntity) authentication.getPrincipal();
 
         Gson gson = new Gson();
@@ -226,10 +222,10 @@ public class StocksController {
 
             String jsonString = jb.toString();
 
-            BuyStockRequest buyStockRequest = gson.fromJson(jsonString, BuyStockRequest.class);
-            int price = (int)(buyStockRequest.getQuantity() * stock.getCurrentPrice());
+            StockOperationRequest stockOperationRequest = gson.fromJson(jsonString, StockOperationRequest.class);
+            int price = (int)(stockOperationRequest.getQuantity() * stock.getCurrentPrice());
 
-            System.out.println("StocksController: /stock/{id}/buy buyRequest: " + buyStockRequest);
+            System.out.println("StocksController: /stock/{id}/buy buyRequest: " + stockOperationRequest);
 
             if(cash > price){
                 AssetEntity cashAsset = portfolio.getCash();
@@ -245,8 +241,8 @@ public class StocksController {
                 }
 
                 if(isStockPresentAlready){
-                    AssetEntity assetToBuy = assetOperationService.getAssetById(portfolio, buyStockRequest.getStockId());
-                    assetToBuy.setQuantity(assetToBuy.getQuantity() + buyStockRequest.getQuantity());
+                    AssetEntity assetToBuy = assetOperationService.getAssetById(portfolio, stockOperationRequest.getStockId());
+                    assetToBuy.setQuantity(assetToBuy.getQuantity() + stockOperationRequest.getQuantity());
                     assetToBuy.setBuyPrice(assetToBuy.getStock().getCurrentPrice());
 
                     session.save(assetToBuy);
@@ -258,11 +254,11 @@ public class StocksController {
                             .body("Stock bought");
                 }
                 else{
-                    StockEntity boughtStock =  stockService.getStockById(buyStockRequest.getStockId());
+                    StockEntity boughtStock =  stockService.getStockById(stockOperationRequest.getStockId());
 
                     AssetEntity boughtAsset = new AssetEntity();
 
-                    boughtAsset.setQuantity(buyStockRequest.getQuantity());
+                    boughtAsset.setQuantity(stockOperationRequest.getQuantity());
                     boughtAsset.setStock(boughtStock);
                     boughtAsset.setBuyPrice(boughtStock.getCurrentPrice());
                     boughtAsset.setPortfolioEntity(portfolio);

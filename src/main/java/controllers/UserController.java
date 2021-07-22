@@ -43,7 +43,7 @@ public class UserController {
                 .addAnnotatedClass(StockEntity.class)
                 .addAnnotatedClass(UserEntity.class)
                 .buildSessionFactory();
-        Session session = factory.getCurrentSession();
+        Session session = factory.openSession();
 
         Gson gson = new Gson();
         StringBuffer jb = new StringBuffer();

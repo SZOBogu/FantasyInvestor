@@ -1,15 +1,9 @@
 package requests;
 
-public class SellStockRequest {
+public class StockOperationRequest {
     private int stockId;
     private int quantity;
-    private int sellingPrice;
-
-    public SellStockRequest(int stockId, int quantity, int sellingPrice) {
-        this.stockId = stockId;
-        this.quantity = quantity;
-        this.sellingPrice = sellingPrice;
-    }
+    private int price;
 
     public int getStockId() {
         return stockId;
@@ -27,20 +21,20 @@ public class SellStockRequest {
         this.quantity = quantity;
     }
 
-    public int getSellingPrice() {
-        return sellingPrice;
+    public int getPrice() {
+        return price;
     }
 
-    public void setSellingPrice(int sellingPrice) {
-        this.sellingPrice = sellingPrice;
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     @Override
     public String toString() {
-        return "SellStockRequest{" +
+        return "StockOperationRequest{" +
                 "stockId=" + stockId +
                 ", quantity=" + quantity +
-                ", sellingPrice=" + sellingPrice +
+                ", price=" + price +
                 '}';
     }
 }
