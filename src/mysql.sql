@@ -13,6 +13,7 @@ CREATE TABLE `user` (
                         `role` varchar(45) DEFAULT NULL,
                         `portfolio_id` int DEFAULT NULL,
                         PRIMARY KEY (`user_id`),
+                        UNIQUE KEY `TITLE_UNIQUE` (`username`),
                         KEY `FK_DETAIL_idx` (`portfolio_id`),
                         CONSTRAINT `FK_DETAIL` FOREIGN KEY (`portfolio_id`)
                             REFERENCES `portfolio` (`portfolio_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -58,6 +59,7 @@ CREATE TABLE `stock` (
                          `priceAtTheStartOfTheYear` DOUBLE DEFAULT NULL,
                          `asset_id` int DEFAULT NULL,
                          PRIMARY KEY (`stock_id`),
+                         UNIQUE KEY `TITLE_UNIQUE` (`name`),
                          KEY `FK_DETAIL12_idx` (`asset_id`),
                          CONSTRAINT `FK_DETAIL13` FOREIGN KEY (`asset_id`)
                              REFERENCES `asset` (`asset_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
